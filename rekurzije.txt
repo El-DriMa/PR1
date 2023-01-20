@@ -1,0 +1,312 @@
+/*
+ Napisati program koji će omogućiti korisniku da unese veličinu n 
+ jednodimenzionalnog dinamičkog niza integer vrijednosti (n > 2).
+ Napisati rekurzivnu funkciju koja će taj niz puniti serijom brojeva 
+ tako da je svaki sljedeći broj jednak umnošku dva prethodna broja,
+ a prva dva elementa su 1 i 3 (1, 3, 3, 9, 27, ...).
+
+Zatim napraviti drugu rekurzivnu funkciju koja će izračunati 
+zbir svih elemenata tog niza (voditi računa o tipu podatka zbog veličine broja).
+
+(Obavezno koristiti aritmetiku pokazivača)
+*/
+#include<iostream>
+using namespace std;
+void popuniNiz(int* niz, int v) {
+    if (v < 3) {
+        *niz = 1;
+        *(niz + 1) = 3;
+    }
+    else {
+        popuniNiz(niz, v - 1);
+        *(niz + v - 1) = *(niz + v - 2) * *(niz + v - 3);
+    }
+}
+long long int suma(int* niz, int v) {
+    if (v == 1) return *niz;
+    else {
+        return *(niz + v - 1) + suma(niz, v - 1);
+    }
+}
+int main() {
+
+    int v;
+    while (cout << "Unesite velicinu niza : ", cin >> v, v <= 2);
+
+    int* niz = new int[v];
+    popuniNiz(niz, v);
+    for (int i= 0; i < v; i++)
+    {
+        cout << *(niz + i) << " ";
+    }
+    cout << endl;
+    cout << "Suma je : " << suma(niz, v);
+    delete[] niz;
+   
+    return 0;
+}
+
+
+/*
+Napisati program koji će omogućiti korisniku da unese veličinu 
+jednodimenzionalnog dinamičkog niza integer vrijednosti.
+Napisati rekurzivnu funkciju koja će taj niz popuniti serijom brojeva 
+2, 4, 8, 16, 32, 64, 128, 256, 512, itd., 
+tako da je svaki sljedeći broj jednak prethodnom pomnoženom sa 2,
+počevši od broja 2.
+Zatim,korisnik unosi željeni broj te rekurzivnom funkcijom
+provjerava da li je taj broj član kreiranog niza.
+Rekurzija se prekida kada se popuni cijeli niz ili kada se desi overflow na integer varijabli.
+
+(U ovom zadatku je zabranjeno indeksirati niz uglastim zagradama. Obavezno koristiti aritmetiku pokazivača.)
+*/
+#include<iostream>
+using namespace std;
+void popuniNiz(int* niz, int v) {
+    if (v < 2) *niz = 2;
+    else {
+        popuniNiz(niz, v - 1);
+        *(niz + v-1) = *(niz + v-2) * 2;
+    }
+}
+bool provjera(int* niz, int v, int broj,int brojac=0) {
+    if (brojac == v) return false;
+    if (*(niz + brojac) == broj) return true;
+    provjera(niz, v, broj, brojac + 1);
+    
+}
+int main() {
+
+    int v;
+    while (cout << "Unesite velicinu niza : ", cin >> v, v <=0);
+
+    int* niz = new int[v];
+    popuniNiz(niz, v);
+    for (int i = 0; i < v; i++)
+    {
+        cout << *(niz + i) << " ";
+    }
+    cout << endl;
+    int broj;
+    cout << "Unesite broj koji zelite provjeriti : ",
+        cin >> broj;
+    if (provjera(niz, v, broj))
+        cout<<"Taj broj se nalazi u nizu."<<endl;
+    else
+        cout << "Taj broj se ne nalazi u nizu." << endl;
+
+    delete[] niz;
+
+    return 0;
+}
+
+
+/*
+Napisati program koji će omogućiti korisniku da unese veličinu 
+jednodimenzionalnog dinamičkog niza integer vrijednosti. 
+Napisati funkciju koja će taj niz popuniti serijom Fibonacci brojeva
+počevši od broja 1. 
+Za pronalazenje elemenata Fibonacci serije obavezno koristiti rekurzivnu funkciju. 
+Punjenje niza se prekida kada se popuni cijeli niz ili kada se desi overflow na integer varijabli.
+
+(U ovom zadatku je zabranjeno indeksirati niz uglastim zagradama. Obavezno koristiti aritmetiku pokazivača.)
+*/
+#include<iostream>
+using namespace std;
+int fibonacci(int broj) {
+    if (broj <=1) return broj;
+    return fibonacci(broj - 1) + fibonacci(broj - 2);
+}
+/*void popuniNiz2(int* niz, int v) { //AKO KRECE OD 0
+    if (v == 0) return;
+    int f = fibonacci(v - 1);
+    if (f < 0) return;
+    *(niz + v - 1) = f;
+    popuniNiz2(niz, v - 1);
+}*/
+void popuniNiz(int* niz, int v) { //AKO KRECE OD 1
+    if (v == 0) return;
+    int f = fibonacci(v);
+    if (f < 0) return;
+    *(niz + v - 1) = f;
+    popuniNiz(niz, v - 1);
+}
+int main() {
+
+    int v;
+    while (cout << "Unesite velicinu niza : ", cin >> v, v <=0);
+
+    int* niz = new int[v];
+    popuniNiz(niz, v);
+    for (int i = 0; i < v; i++)
+    {
+        cout << *(niz + i) << " ";
+    }
+   
+    delete[] niz;
+
+    return 0;
+}
+
+
+/*
+Napisati program koji će omogućiti korisniku da unese veličinu 
+jednodimenzionalnog dinamičkog niza integer vrijednosti.
+Napisati rekurzivnu funkciju koja će taj niz popuniti faktorijelom 
+rednog broja člana niza (1!, 2!, 3!, 4!...). 
+Rekurzija se prekida kada se popuni cijeli niz ili kada se desi overflow na integer varijabli. 
+U ovom zadatku je zabranjeno indeksirati elemente niza uglastim zagradama.
+
+(Obavezno koristiti aritmetiku pokazivača. Obavezno sve riješiti jednom rekurzivnom funkcijom.)
+*/
+#include<iostream>
+using namespace std;
+void popuniNiz(int* niz, int v, int i) {
+    if (i == v) return;
+    int f = (i == 0) ? 1 : i * (*(niz + i - 1));
+    if (f < 0) return;
+    *(niz + i) = f;
+    popuniNiz(niz, v, i + 1);
+}
+int main() {
+
+    int v;
+    while (cout << "Unesite velicinu niza : ", cin >> v, v <=0);
+
+    int* niz = new int[v];
+    popuniNiz(niz, v, 0);
+    cout << "Faktorijeli : ";
+    for (int i = 0; i < v; i++)
+    {
+        if (*(niz + i) >= 0)
+            cout << *(niz + i) << " ";
+    }
+   
+   
+    delete[] niz;
+
+    return 0;
+}
+
+
+/*
+Napisati program koji će omogućiti korisniku da unese veličinu
+jednodimenzionalnog dinamičkog niza integer vrijednosti. 
+Napisati rekurzivnu funkciju koja će taj niz popuniti random brojevima 
+u opsegu od 1 do 100. Za generisanje random brojeva koristiti rand() % 100 + 1. 
+Punjenje niza se prekida kada se popuni cijeli niz ili kada se tri puta uzastopno 
+dobije isti random broj. U ovom zadatku je zabranjeno indeksirati elemente niza uglastim zagradama. 
+Obavezno koristiti aritmetiku pokazivača.
+
+(Obavezno sve riješiti jednom rekurzivnom funcijom.)
+*/
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+void popuniNiz(int* niz,int v,int prosli,int isti) {
+    if (v == 0 || isti == 3) return;
+    int random = rand() % 100 + 1;
+    *niz = random;
+    if (random == prosli) isti++;
+    else isti = 0;
+
+    popuniNiz(niz + 1, v - 1, random, isti);
+}
+int main() {
+    srand(time(NULL));
+    int v;
+    while (cout << "Unesite velicinu niza : ", cin >> v, v <=0);
+
+    int* niz = new int[v];
+    popuniNiz(niz, v, 0, 0);
+    for (int i = 0; i < v; i++)
+    {
+        cout << *(niz + i) << " ";
+    }
+    
+   
+    delete[] niz;
+
+    return 0;
+}
+
+/* //nije rekurzija ali eto
+ Napisati program koji će generisati Fibonacci niz i smjestiti ga u 
+ jednodimenzionalni niz od 20 elemenata.
+ (Fibonaccijev niz je niz brojeva koji počinje brojevima 0 i 1, a svaki sljedeći broj
+ u nizu dobije se zbrajanjem prethodna dva: F(0) = 0, F(1) = 1, F(n) = F(n-1) + F(n-2)). 
+ Zatim napraviti funkciju koja će sortirati niz uzlazno po srednjoj cifri. 
+ (Za brojeve sa parnim brojem koristiti aritmeticku sredinu srednje dvije cifre).
+
+(Voditi računa o tipu podatka prilikom računanja srednje cifre.)
+*/
+#include<iostream>
+#include<cstdlib>
+#include<cmath>
+using namespace std;
+void popuniNiz(int niz[20]) {
+    niz[0] = 0;
+    niz[1] = 1;
+    for (int i = 2; i < 20; i++)
+    {
+        niz[i] = niz[i - 1] + niz[i - 2];
+    }
+}
+int brojCifri(int broj) {
+    if (broj == 0) return 1;
+    else {
+        int brojC = (int)log10(broj) + 1;
+        return brojC;
+    }
+}
+int srednjaCifra(int broj) {
+    int brC = brojCifri(broj);
+    if (brC % 2 != 0) {
+        return (broj / (int)pow(10,brC/2))%10;  
+    }
+    else {
+        broj = broj / pow(10.0, (brC / 2 - 1));
+        int temp = broj % 10;
+        broj /= 10;
+        temp += broj % 10;
+        return temp / 2;
+    }
+
+}
+void sortiraj(int niz[20]) {
+    for (int i = 0; i < 20 - 1; i++)
+    {
+        if (srednjaCifra(niz[i]) > srednjaCifra(niz[i + 1])) {
+            int temp = niz[i + 1];
+            niz[i + 1] = niz[i];
+            niz[i] = temp;
+
+        }
+    }
+       
+}
+int main() {
+    srand(time(NULL));//od proslog zadatka
+
+    int niz[20];
+    popuniNiz(niz);
+    for (int i = 0; i < 20; i++)
+    {
+        cout << niz[i] << " ";
+    }
+    cout << endl;
+    cout << "Srednje cifre su : ";
+    for (int i = 0; i < 20; i++)
+    {
+        cout <<srednjaCifra(niz[i]) << " ";
+    }
+    cout << endl;
+    cout << "Nakon sortiranja niz je : ";
+    sortiraj(niz);
+    for (int i = 0; i < 20; i++)
+    {
+        cout << niz[i] << " ";
+    }
+
+    return 0;
+}

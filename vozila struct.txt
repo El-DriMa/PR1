@@ -1,0 +1,182 @@
+/*
+ Kreirati dinamički dvodimenzionalni niz čiji su elementi objekti tipa vozilo
+ (vozilo je struktura čija su obilježja data u nastavku). 
+ Omogućiti korisniku da unese dimenzije niza.
+
+struct vozilo
+{
+    char *markaVozila;
+    char *brojSasije;
+    char *tipVozila; //dozvoliti unos samo vrijednosti "A", "B", ili "C"
+    int *kubnihCM;
+};
+
+Redovi dvodimenzionalnog niza predstavljaju različite firme 
+a u kolone različita vozila u tim firmama. 
+(radi jednostavnosti rješenja podrazumijevati da svaka firma ima isti broj vozila).
+Omogućiti korisniku unos svih podataka za sva vozila.
+
+Napisati i testirati funkciju koja će pronaći (firmu) koja ima največu prosječnu kubikazu vozila 
+(prosjek vrijednosti kubnihCM).
+
+Zatim napisati i testirati funkciju koja će pronaći i ispisati porosječnu kubikažu vozila 
+(prosjek vrijednosti kubnihCM) svih vozila tipova "A" te posebno svih vozila tipa "B" u cijeloj matrici
+
+*/
+
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+char* alociraj(const char* temp) {
+    if (temp == nullptr) return nullptr;
+    int vel = strlen(temp) + 1;
+    char* novi = new char[vel];
+    strcpy_s(novi, vel, temp);
+
+    return novi;
+}
+char* unosTexta() {
+    char text[100];
+    cin.getline(text, 100);
+    return alociraj(text);
+}
+
+struct vozilo
+{
+    char* markaVozila;
+    char* brojSasije;
+    char* tipVozila;
+    int* kubnihCM;
+
+    char* alociraj(const char* temp) {
+        if (temp == nullptr) return nullptr;
+        int vel = strlen(temp) + 1;
+        char* novi = new char[vel];
+        strcpy_s(novi, vel, temp);
+
+        return novi;
+   }
+
+    vozilo() {
+        markaVozila = nullptr;
+        brojSasije = nullptr;
+        tipVozila = nullptr;
+        kubnihCM = nullptr;
+    }
+
+    void unos(){
+        cin.ignore();//obavezno ovde
+        cout << "Unesite marku vozila : ";
+        markaVozila = unosTexta();
+
+        cout << "Unesite broj sasije : ";
+        brojSasije = unosTexta();
+
+        do {
+            cout << "Unesite tip vozila (A,B ili C) : ";
+            tipVozila = unosTexta();
+        } while (*tipVozila != 'A' && *tipVozila != 'B' && *tipVozila != 'C');
+
+        kubnihCM = new int;
+        cout << "Kubnih cm : ";
+        cin >> *kubnihCM;
+    }
+
+    void ispis() {
+        cout << "Marka vozila : " << markaVozila << endl;
+        cout << "Broj sasije : " << brojSasije << endl;
+        cout << "Tip vozila : " << tipVozila << endl;
+        cout << "Kubnih cm : " << *kubnihCM << endl;
+    }
+
+    ~vozilo() {
+        delete[] markaVozila;
+        markaVozila = nullptr;
+        delete[] brojSasije;
+        brojSasije = nullptr;
+        delete[] tipVozila;
+        tipVozila = nullptr;
+        delete kubnihCM;
+        kubnihCM = nullptr;
+    }
+};
+
+int firmaSaNajvecomKubikazom(vozilo**, int, int);
+void prosjecneKubikazeSvih(vozilo**, int, int);
+
+int main() {
+
+    int red, kolona;
+    while (cout << "Unesite broj redova : ", cin >> red, red < 0);
+    while (cout << "Unesite broj kolona : ", cin >> kolona, kolona < 0);
+
+    vozilo** v = new vozilo*[red];
+    for (int i = 0; i < red; i++)
+    {
+        *(v + i) = new vozilo[kolona];
+    }
+    for (int i = 0; i < red; i++)
+    {
+        for (int j = 0; j < kolona; j++)
+        {
+            (*(v + i) + j)->unos();
+        }
+    }
+    /*for (int i = 0; i < red; i++)
+    {
+        for (int j = 0; j < kolona; j++)
+        {
+            (*(v + i) + j)->ispis();
+        }
+    }*/ //nema potrebe ispisivati sve.
+
+    cout << "Firma sa najvecim prosjekom kubnihCM je : Firma " << firmaSaNajvecomKubikazom(v, red, kolona) << endl;
+    prosjecneKubikazeSvih(v, red, kolona);
+
+    for (int i = 0; i < red; i++)
+    {
+        delete[] * (v + i);
+    }
+    delete[] v, v = nullptr;
+
+    return 0;
+}
+
+int firmaSaNajvecomKubikazom(vozilo** v, int red, int kolona) {
+    int suma = 0, max = INT_MIN, firma;
+    for (int i = 0; i < red; i++)
+    {
+        for (int j = 0; j < kolona; j++)
+        {
+            suma += *(*(v + i) + j)->kubnihCM;
+        }
+        suma = suma / float(kolona);
+        if (suma > max) {
+            max = suma;
+            firma = i;
+        }
+        suma=0;
+    }
+    return firma;
+}
+void prosjecneKubikazeSvih(vozilo** v, int red, int kolona) {
+    int sumaA = 0, sumaB = 0, sumaC = 0;
+    int brojacA = 0, brojacB = 0, brojacC = 0;
+    for (int i = 0; i < red; i++)
+    {
+        for (int j = 0; j < kolona; j++)
+        {
+            if (*(*(v + i) + j)->tipVozila == 'A')
+                sumaA += *(*(v + i) + j)->kubnihCM, brojacA++;
+            if (*(*(v + i) + j)->tipVozila == 'B')
+                sumaB += *(*(v + i) + j)->kubnihCM, brojacB++;
+            if (*(*(v + i) + j)->tipVozila == 'C')
+                sumaC += *(*(v + i) + j)->kubnihCM, brojacC++;
+
+        }
+    }
+    cout << "Prosjecna kubikaza vozila tipa A je : " << sumaA / float(brojacA) << endl;
+    cout << "Prosjecna kubikaza vozila tipa B je : " << sumaB / float(brojacB) << endl;
+    cout << "Prosjecna kubikaza vozila tipa C je : " << sumaC / float(brojacC) << endl;
+
+}

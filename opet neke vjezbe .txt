@@ -1,0 +1,99 @@
+#include<iostream>
+using namespace std;
+void swap(int& x, int& y) {
+	
+	int temp = x;
+	x = y;
+	y = temp;
+}
+void swap2(int* x, int* y) {
+	int temp = *x;
+	*x = *y;
+	*y = temp;
+}
+int add(int* a, int* b) {
+	return *a + *b;
+}
+int multiply(int* a, int* b) {
+	return *a * (*b);
+}
+int subtract(int* a, int* b) {
+	return *a - (*b);
+}
+int divide(int* a, int* b) {
+	return *a / *b;
+}
+int* max(int* a, int* b) {
+	return (*a > *b) ? a : b;
+}
+int* min(int* a, int* b) {
+	return (*a < *b) ? a : b;
+}
+void enterArray(int* p, int size) {
+	for (int i = 0; i < size; i++)
+	{
+		cout << "Unesite br : ", cin >> *(p + i);
+
+	}
+}
+void printArray(int* p, int size, char d = ' ') {
+	for (int i = 0; i < size; i++)
+	{
+		cout<< *(p + i);
+		if (i < size - 1) cout << d;
+
+		cout << endl;
+
+	}
+}
+int main() {
+
+	int arr[5] = { 1,33,35,2,5 };
+	int arr2[6];
+
+	enterArray(arr, 5);
+	printArray(arr, 5);
+	
+
+	return 0;
+}
+int* createArray(int size) {
+	return new int[size];
+}
+void destroyArray(int* p) {
+	delete[] p;
+}
+int* getMaxElement(int* p, int size) {
+	int max = INT_MIN;
+	for (int i = 0; i < size; i++)
+	{
+		if (*(p + i) > max) max = *(p + i);
+	}
+	return &max;
+}
+int* findByValue(int* p, int size, int value) {
+	for (int i = 0; i < size; i++)
+	{
+		if (*(p + i) == value) return p + i;
+	}
+	return nullptr;
+
+}
+void demo() {
+	int size;
+	cout << "Unesite velicinu : ", cin >> size;
+	int *arr=createArray(size);
+	enterArray(arr, size);
+	printArray(arr, size);
+	cout << getMaxElement(arr, size);
+	cout << *findByValue(arr, size, 5);
+	destroyArray(arr);
+}
+int main() {
+
+	demo();
+	
+	
+
+	return 0;
+}

@@ -1,0 +1,55 @@
+#include<iostream>
+using namespace std;
+/*
+1.Napisati program koji ucitava prirodni broj n.Program treba ispisati najmanji prirodni broj m,
+veci ili jednak n,koji je potencija nekog prirodnog broja.
+Tj.m=k^i,gdje su k i i>=2 prirodni brojevi.
+U ovom zadatku je zabranjeno koristiti pow funkciju.Potenciju racunati koristeci rekurzivnu funkciju
+kojoj se prosljedjuje k i i i u kojoj je dozvoljena samo operacija mnozenja.
+*/
+int potencija(int k, int i) {
+	if (i == 0) return 1;
+	return k * potencija(k, i - 1);
+}
+int main() {
+
+	int n;
+	cout << "Unesite n : ", cin >> n;
+
+	int k, i;
+	do {
+		cout << "Unesite vrijednost k : ", cin >> k;
+	} while (k < 2);
+	do {
+		cout << "Unesite vrijednost i : ", cin >> i;
+	} while (i < 2);
+	
+	int m = potencija(k, i);
+	while (m < n) {
+		i++;
+		m = potencija(k, i);
+	}
+	cout << "Broj je : " << m;
+	
+	return 1;
+}
+
+#include<iostream>
+using namespace std;
+/*
+2.Napisati program u kojem cete upotrebiti rekurzivnu funkciju
+ciji je zadatak da racuna n-ti broj Fibonnacijevog niza.
+*/
+int nthF(int n) {
+	if (n <= 2) return 1;
+	return nthF(n - 1) + nthF(n - 2);
+}
+int main() {
+
+	int n;
+	while (cout << "Unesite pozitivan broj : ", cin >> n, n <= 0);
+
+	cout << nthF(n);
+	
+	return 1;
+}

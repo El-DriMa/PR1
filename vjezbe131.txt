@@ -1,0 +1,415 @@
+#include<iostream>
+#include<iomanip>
+using namespace std;
+struct datum {
+
+	int* _dan = NULL;
+	int* _mjesec = NULL;
+	int* _godina = NULL;
+	
+	void alociraj() {
+		if (_dan == nullptr)
+			_dan = new int;
+		if (_mjesec == nullptr)
+			_mjesec = new int;
+		if (_godina == nullptr)
+			_godina = new int;
+	}
+	void unos() {
+		alociraj();
+		cout << "Unesite dan : ",
+			cin >> *_dan;
+		cout << "Unesite mjesec : ",
+			cin >> *_mjesec;
+		cout << "Unesite godinu : ",
+			cin >> *_godina;
+
+	}
+
+	void set(int dan, int mjesec, int godina) {
+		alociraj();
+		*_dan = dan;
+		*_mjesec = mjesec;
+		*_godina = godina;
+	}
+	void set(datum& obj) {
+		alociraj();
+		*_dan = obj.getDan();
+		*_mjesec = obj.getMjesec();
+		*_godina = obj.getGodina();
+	}
+
+	void setDan(int dan) {
+		if (_dan == nullptr)
+			_dan = new int;
+		*_dan = dan;
+	}
+	void setMjesec(int mjesec) {
+		if (_mjesec == nullptr)
+			_mjesec = new int;
+		*_mjesec = mjesec;
+	}
+	void setGodina(int godina) {
+		if (_godina == nullptr)
+			_godina = new int;
+		*_godina = godina;
+	}
+	int getGodina() const {
+		if (_godina == nullptr)
+			return 0;
+		return *_godina;
+	}
+	int getMjesec() const {
+		if (_mjesec== nullptr)
+			return 0;
+		return *_mjesec;
+	}
+	int getDan() const {
+		if (_dan == nullptr)
+			return 0;
+		return *_dan;
+	}
+	void ispis() {
+		cout << getDan() << "." << getMjesec() << "." << getGodina();
+	}
+
+
+	void dealociraj() {
+		delete _dan;
+		delete _mjesec;
+		delete _godina;
+		_dan = _mjesec = _godina = nullptr;
+	}
+};
+
+bool areEqual(datum& d1, datum& d2) {
+	return d1.getDan() == d2.getDan()
+		&& d1.getMjesec() == d2.getMjesec()
+		&& d1.getGodina() == d2.getGodina();
+}
+bool stariji(datum& d1, datum& d2) {
+	return d1.getGodina() * 365 + d1.getMjesec() * 30 + d1.getDan() < d2.getGodina() * 365 + d2.getMjesec() * 30 + d2.getDan();
+}
+void test() {
+	datum smakSvijeta, odg;
+
+	smakSvijeta.set(21, 12, 2012);
+	odg.set(25, 2, 2024);
+
+	areEqual(smakSvijeta, odg) ? cout << "Da" : cout << "Ne";
+	stariji(smakSvijeta, odg) ? cout << "Prvi je stariji." : cout << "Drugi je stariji";
+
+	smakSvijeta.dealociraj();
+	odg.dealociraj();
+}
+void test2() {
+
+	datum* p;
+	p = new datum;
+
+	p->set(24, 8, 2003);
+	p->ispis();
+	p->dealociraj();
+	
+	delete p;
+	p = nullptr;
+}
+void test3() {
+
+	datum hD[5];
+	for (int i = 0; i < 5; i++)
+	{
+		hD[i].unos();
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		hD[i].ispis();
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		hD[i].dealociraj();
+	}
+}
+void test4() {
+
+	datum* p = new datum[5];
+	for (int i = 0; i < 5; i++)
+	{
+		(p + i)->unos();
+
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		(p + i)->ispis();
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		(p + i)->dealociraj();
+	}
+
+	delete p;
+	p = nullptr;
+}	
+void test5() {
+
+	datum* hD[5];
+	for (int i = 0; i < 5; i++)
+	{
+		hD[i] = new datum;
+		hD[i]->unos();
+	}
+	for (int i = 0; i < 5; i++)
+	{
+	     (*(hD + i))->ispis();
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		(*(hD + i))->dealociraj();
+		delete (*(hD + i));
+		(*(hD + i))=nullptr;
+	}
+}
+void test6() {
+	int brR, brK;
+	cout << "Unesite broj redova: ",
+		cin >> brR;
+	cout << "Unesite broj kolona: ",
+		cin >> brK;
+
+	datum** matrica = new datum * [brR];
+	for (int i = 0; i < brR; i++)
+	{
+		matrica[i] = new datum[brK];
+	}
+	for (int i = 0; i < brR; i++)
+	{
+		for (int j = 0; j < brK; j++)
+		{
+			cout << "Unesite datum na lokkk : [" << i << "]" << "[" << j << "]" << endl;
+			matrica[i][j].unos();
+		}
+	}
+	for (int i = 0; i < brR; i++)
+	{
+		for (int j = 0; j < brK; j++)
+		{
+			matrica[i][j].ispis();
+			cout << "\t";
+		}
+		cout << endl;
+	}
+	for (int i = 0; i < brR; i++)
+	{
+		for (int j = 0; j < brK; j++)
+		{
+			matrica[i][j].dealociraj();
+
+		}
+
+	}
+	for (int i = 0; i < brR; i++)
+	{
+		delete[] matrica[i];
+	}
+	delete[] matrica;
+}
+char* alociraj(const char* izvor) {
+
+	if (izvor == nullptr) 
+		return nullptr;
+	
+	int v = strlen(izvor) + 1;
+	char* novi = new char[v];
+	strcpy_s(novi, v, izvor);
+
+	return novi;
+}
+struct sjediste {
+	int _red;
+	int _kolona;
+	char* _tip; //za 1 il 2
+    char _oznaka[5];
+
+	sjediste() {
+		_red = 0;
+		_kolona = 0;
+		_tip = nullptr;
+		strcpy_s(_oznaka, 5, "");
+	}
+	sjediste(int red,int kolona,const char * tip,const char *oznaka) {
+		_red = red;
+		_kolona = kolona;
+		_tip = alociraj(tip);
+		strcpy_s(_oznaka, 5, oznaka);
+	}
+
+	int getRed() const {
+		return _red;
+	}
+	int getKolona() const {
+		return _kolona;
+	}
+	char* getTip() const {
+		return _tip;
+	}
+	const char* getOznaka() const {
+		return _oznaka;
+	}
+
+	void setRed(int red) {
+		_red = red;
+	}
+	void setKolona(int kolona) {
+		_kolona = kolona;
+	}
+	void setTip(const char* tip) {
+		delete[] _tip;
+		_tip = alociraj(tip);
+	}
+	void setOznaka(const char* oznaka) {
+		strcpy_s(_oznaka, 5, oznaka);
+
+	}
+	void ispis() {
+		cout << "---------------------\n";
+		cout << "Red: " << _red << endl;
+		cout << "Sjediste: " << _kolona << endl;
+		cout << "Tip: " << _tip << endl;
+		cout << "Oznaka: " << _oznaka << endl;
+	}
+
+	~sjediste() {
+
+		delete[] _tip;
+	}
+	
+};
+struct dvorana {
+	int _brR;
+	int _brK;
+	sjediste** _sjediste;
+
+	dvorana() {
+		_brR = 0;
+		_brK = 0;
+	}
+	dvorana(int brR,int brK) {
+		_brR = brR;
+		_brK = brK;
+		_sjediste = new sjediste * [brR];
+		for (int i = 0; i < brR; i++)
+		{
+			_sjediste[i] = new sjediste[brK];
+		}
+		for (int i = 0; i < _brR; i++)
+		{
+			for (int j = 0; j < _brK; j++)
+			{
+				_sjediste[i][j].setRed(i);
+				_sjediste[i][j].setKolona(j);
+				_sjediste[i][j].setTip("ob");
+				_sjediste[i][j].setOznaka("...");
+			}
+		}
+	}
+
+	sjediste* getSjediste(int red, int kolona) {
+		if (red < _brR && kolona < _brK)
+			return &_sjediste  [red][kolona];
+		return nullptr;
+	}
+
+	~dvorana() {
+		for (int i = 0; i < _brR; i++)
+		{
+			delete[] _sjediste[i];
+		}
+		delete[] _sjediste;
+	}
+};
+struct lik {
+
+	const char* _ime{nullptr};
+	const char* _prezime{nullptr};
+	datum* _datumRodjenja{ nullptr };
+	bool* spol{ nullptr };
+	char _zanimanje[50];
+    char _drzava[50];
+	float* _visina{ nullptr };
+	char* _bojaKose{ nullptr };
+	char* _bojaOciju{ nullptr };
+	int _brOsobina = 0;
+	char* _osobine[20]= { nullptr };
+
+	lik() {
+
+		strcpy_s(_zanimanje, 50, "");
+		strcpy_s(_drzava, 50, "");
+
+	}
+	lik(const char* ime,
+		const char* prezime,
+		datum& d1,
+		bool spol,
+		const char* zanimanje,
+		const char* drzava,
+		float visina,
+		const char* bojaKose,
+		const char* bojaOciju) {
+
+		_ime = alociraj(ime);
+		_prezime = alociraj(prezime);
+		_datumRodjenja = new datum; 
+		_datumRodjenja->set(d1);
+		strcpy_s(_zanimanje, 50, zanimanje);
+		strcpy_s(_drzava, 50, drzava);
+		_visina = new float(visina);
+		_bojaKose = alociraj(bojaKose);
+		_bojaOciju = alociraj(bojaOciju);
+	}
+
+	void unos() {
+	
+	}
+
+	bool dodajOsobinu(const char* novaOsobina) {
+		if (_brOsobina == 20) 
+			return false;
+		_osobine[_brOsobina] = alociraj(novaOsobina);
+		_brOsobina++;
+		return true;
+	}
+	bool izbrisiZadnjuOsobinu() {
+		if (_brOsobina == 0)
+			return false;
+		delete[] _osobine[_brOsobina];
+		_brOsobina--;
+		return true;
+	}
+	~lik() {
+		delete[] _ime;
+		delete[] _prezime;
+		delete spol;
+		_datumRodjenja->dealociraj();
+		delete  _datumRodjenja;
+		delete _visina;
+		delete[] _bojaKose;
+		delete[] _bojaOciju;
+
+		for (int i = 0; i < _brOsobina; i++)
+		{
+			delete[] _osobine[i];
+		}
+		delete[] _osobine;
+
+	}
+
+};
+int main() {
+	
+	dvorana extreme2D(20, 40);
+
+	
+	
+	return 1;
+}

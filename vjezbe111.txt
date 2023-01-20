@@ -1,0 +1,226 @@
+#include<iostream>
+#include<iomanip>
+using namespace std;
+struct datum {
+
+	int* _dan = NULL;
+	int* _mjesec = NULL;
+	int* _godina = NULL;
+	
+	void alociraj() {
+		if (_dan == nullptr)
+			_dan = new int;
+		if (_mjesec == nullptr)
+			_mjesec = new int;
+		if (_godina == nullptr)
+			_godina = new int;
+	}
+	void unos() {
+		alociraj();
+		cout << "Unesite dan : ",
+			cin >> *_dan;
+		cout << "Unesite mjesec : ",
+			cin >> *_mjesec;
+		cout << "Unesite godinu : ",
+			cin >> *_godina;
+
+	}
+
+	void set(int dan, int mjesec, int godina) {
+		alociraj();
+		*_dan = dan;
+		*_mjesec = mjesec;
+		*_godina = godina;
+	}
+	void set(datum& obj) {
+		alociraj();
+		*_dan = obj.getDan();
+		*_mjesec = obj.getMjesec();
+		*_godina = obj.getGodina();
+	}
+
+	void setDan(int dan) {
+		if (_dan == nullptr)
+			_dan = new int;
+		*_dan = dan;
+	}
+	void setMjesec(int mjesec) {
+		if (_mjesec == nullptr)
+			_mjesec = new int;
+		*_mjesec = mjesec;
+	}
+	void setGodina(int godina) {
+		if (_godina == nullptr)
+			_godina = new int;
+		*_godina = godina;
+	}
+	int getGodina() const {
+		if (_godina == nullptr)
+			return 0;
+		return *_godina;
+	}
+	int getMjesec() const {
+		if (_mjesec== nullptr)
+			return 0;
+		return *_mjesec;
+	}
+	int getDan() const {
+		if (_dan == nullptr)
+			return 0;
+		return *_dan;
+	}
+	void ispis() {
+		cout << getDan() << "." << getMjesec() << "." << getGodina();
+	}
+
+
+	void dealociraj() {
+		delete _dan;
+		delete _mjesec;
+		delete _godina;
+		_dan = _mjesec = _godina = nullptr;
+	}
+};
+
+bool areEqual(datum& d1, datum& d2) {
+	return d1.getDan() == d2.getDan()
+		&& d1.getMjesec() == d2.getMjesec()
+		&& d1.getGodina() == d2.getGodina();
+}
+bool stariji(datum& d1, datum& d2) {
+	return d1.getGodina() * 365 + d1.getMjesec() * 30 + d1.getDan() < d2.getGodina() * 365 + d2.getMjesec() * 30 + d2.getDan();
+}
+void test() {
+	datum smakSvijeta, odg;
+
+	smakSvijeta.set(21, 12, 2012);
+	odg.set(25, 2, 2024);
+
+	areEqual(smakSvijeta, odg) ? cout << "Da" : cout << "Ne";
+	stariji(smakSvijeta, odg) ? cout << "Prvi je stariji." : cout << "Drugi je stariji";
+
+	smakSvijeta.dealociraj();
+	odg.dealociraj();
+}
+void test2() {
+
+	datum* p;
+	p = new datum;
+
+	p->set(24, 8, 2003);
+	p->ispis();
+	p->dealociraj();
+	
+	delete p;
+	p = nullptr;
+}
+void test3() {
+
+	datum hD[5];
+	for (int i = 0; i < 5; i++)
+	{
+		hD[i].unos();
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		hD[i].ispis();
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		hD[i].dealociraj();
+	}
+}
+void test4() {
+
+	datum* p = new datum[5];
+	for (int i = 0; i < 5; i++)
+	{
+		(p + i)->unos();
+
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		(p + i)->ispis();
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		(p + i)->dealociraj();
+	}
+
+	delete p;
+	p = nullptr;
+}	
+void test5() {
+
+	datum* hD[5];
+	for (int i = 0; i < 5; i++)
+	{
+		hD[i] = new datum;
+		hD[i]->unos();
+	}
+	for (int i = 0; i < 5; i++)
+	{
+	     (*(hD + i))->ispis();
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		(*(hD + i))->dealociraj();
+		delete (*(hD + i));
+		(*(hD + i))=nullptr;
+	}
+}
+void test6() {
+	int brR, brK;
+	cout << "Unesite broj redova: ",
+		cin >> brR;
+	cout << "Unesite broj kolona: ",
+		cin >> brK;
+
+	datum** matrica = new datum*[brR];
+	for (int i = 0; i < brR; i++)
+	{
+		matrica[i] = new datum[brK];
+	}
+	for (int i = 0; i < brR; i++)
+	{
+		for (int j = 0; j < brK; j++)
+		{
+			cout << "Unesite datum na lokkk : [" << i << "]" << "[" << j << "]" << endl;
+			matrica[i][j].unos();
+		}
+	}
+	for (int i = 0; i < brR; i++)
+	{
+		for (int j = 0; j < brK; j++)
+		{
+			matrica[i][j].ispis();
+			cout << "\t";
+		}
+		cout << endl;
+	}
+	for (int i = 0; i < brR; i++)
+	{
+		for (int j = 0; j < brK; j++)
+		{
+			matrica[i][j].dealociraj();
+
+		}
+		
+	}
+	for (int i = 0; i < brR; i++)
+	{
+		delete[] matrica[i];
+	}
+	delete[] matrica;
+}
+
+int main() {
+
+	test6();
+
+	cout << endl;
+
+	
+	
+	return 1;
+}

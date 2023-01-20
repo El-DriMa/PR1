@@ -1,0 +1,172 @@
+#include<iostream>
+#include<ctime>
+#include<cstdlib>
+using namespace std;
+
+/*
+1.Kreirati 2D dinamicki niz ciji su elementi objekti tipa figura.
+(Figura je struktura cija su obiljazja data u nastavku).
+Omoguciti korisniku da unese dimenzije niza te omoguciti unos elemenata
+na nacin da se na svako crno polje unese figura cija je visina veca od 5 cm,
+a na svako bijelo figura cija je visina manja od 5cm.
+Ukoliko je unesena visina jednaka 5cm,polje treba ostati prazno.
+
+struct figura{
+	int ID;
+	char* nazivFigure;
+	float* visinaFigure;
+};
+Potrebno je napraviti funkciju koja ce racunati prosjecnu visinu svih figura
+koje se nalaze na crnim poljima iznad sporedne dijagonale.
+Funkcija treba vratiti pokazivac na memorijsku lokaciju u kojoj je upisana ta vrijednost.
+U ovom zadatku je zabranjeno indexirati elemente niza uglastim zagradama.
+Obavezno koristiti aritmetiku pokazivaca.
+*/
+
+struct figura {
+
+	int ID;
+	char* nazivFigure;
+	float* visinaFigure;
+
+	figura() {
+		ID = 0;
+		nazivFigure = new char[10];
+		visinaFigure = new float;
+	}
+
+	~figura() {
+		delete[] nazivFigure;
+		nazivFigure = nullptr;
+
+		delete visinaFigure;
+		visinaFigure = nullptr;
+	}
+};
+
+void unos(figura**, int, int);
+void ispis(figura**, int, int);
+float* prosjecnaVisina(figura**, int, int);
+void dealokacija(figura**&, int);
+void ispisVisina(figura** f, int, int);
+
+int main() {
+
+	srand(time(NULL));
+	int red, kolona;
+	while (cout << "Unesite broj redova : ", cin >> red, red < 0);
+	while (cout << "Unesite broj kolona : ", cin >> kolona, kolona < 0);
+
+	figura** f = new figura * [red];
+	for (int i = 0; i < red; i++)
+	{
+		*(f + i) = new figura[kolona];
+	}
+
+	unos(f, red, kolona);
+	ispis(f, red, kolona);
+	cout << "Prosjecna visina crnih polja iznad sporedne dijagonale je : " << *prosjecnaVisina(f, red, kolona) << " ,a njena lokacija je : " << prosjecnaVisina(f, red, kolona) << endl;
+	ispisVisina(f, red, kolona);
+
+	dealokacija(f, red);
+
+	return 1;
+}
+
+void unos(figura** f, int red, int kolona) {
+	cin.ignore();
+	cout << "Unesite " << red * kolona << " elemenata : " << endl;
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			(*(f + i) + j)->ID = rand() % 1000 + 1;
+			strcpy_s((*(f + i) + j)->nazivFigure, sizeof((*(f + i) + j)->nazivFigure), "naziv");
+			if ((i + j) % 2 == 0) {
+				*(*(f + i) + j)->visinaFigure = 5 + rand() % 10 + 1;
+			}
+			else {
+				*(*(f + i) + j)->visinaFigure = 0 + rand() % 5 + 1;
+			}
+			/*cout << "Unesite ID : ", //rucni unos
+				cin >> (*(f + i) + j)->ID;
+			cin.ignore();
+			cout << "Unesite naziv figure : ";
+			cin.getline((*(f + i) + j)->nazivFigure, 10);
+
+			if ((i + j) % 2 == 0) {
+				cout << "Unesite visinu vecu od 5 cm : ",
+					cin >> *(*(f + i) + j)->visinaFigure;
+				if (*(*(f + i) + j)->visinaFigure < 5.0f) {
+					cout << "Unijeli ste pogresnu vrednost.Ponovite unos. ",
+						cin >> *(*(f + i) + j)->visinaFigure;
+				}
+			}
+			else {
+				cout << "Unesite visinu manju od 5cm : ",
+					cin >> *(*(f + i) + j)->visinaFigure;
+				if (*(*(f + i) + j)->visinaFigure > 5.0f) {
+					cout << "Unijeli ste pogresnu vrednost.Ponovite unos.",
+						cin >> *(*(f + i) + j)->visinaFigure;
+				}
+			}
+			if (*(*(f + i) + j)->visinaFigure == 5.0f)
+				(*(*(f + i) + j)->visinaFigure =0);*/
+		}
+	}
+}
+
+void ispis(figura** f, int red, int kolona) {
+	cout << endl;
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			cout << "ID : " << (*(f + i) + j)->ID << endl;
+			cout << "Naziv : " << (*(f + i) + j)->nazivFigure << endl;
+			cout << "Visina : " << *(*(f + i) + j)->visinaFigure << endl;
+		}
+	}
+}
+
+float* prosjecnaVisina(figura** f, int red, int kolona) {
+
+	int suma = 0, brojac = 0;
+	float rez;
+
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j <kolona; j++)
+		{
+			if ((i + j) % 2 == 0 && (i<=j)) {
+				suma += (*(*(f + i) + j)->visinaFigure);
+				brojac++;
+			}
+		}
+	}
+	if (brojac != 0)
+		rez = suma / float(brojac);
+	else rez = 0;
+	return new float (rez);
+}
+void ispisVisina(figura** f, int red, int kolona) {
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			cout << *(*(f + i) + j)->visinaFigure << " ";
+		}
+		cout << endl;
+	}
+}
+void dealokacija(figura**& f, int red) {
+
+	for (int i = 0; i < red; i++)
+	{
+		delete[] * (f + i);
+
+	}
+
+	delete[] f;
+	f = nullptr;
+}

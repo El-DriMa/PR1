@@ -1,0 +1,346 @@
+/*
+ Poštujući sve faze programiranja, napisati program koji korisniku omogućava 
+ unos realnog broja x i odabir funkcije za proračun datog izraza. 
+ Korisnik bira funkciju unosom jednog od sljedećih karaktera: 's'(sin), 'c'(cos).
+ U slučaju da korisnik unese karakter koji ne odgovara niti jednog od predefinisanih vrijednosti
+ ispisati odgovarajuću poruku i ponoviti odabir.
+
+ Za odabranu funkciju sin izraz je:
+ f(x)=1+(1/sin(x)+x)+(2/sin(x/2)+x)+...+x/sin(x/x)+x);
+*/
+#include<iostream>
+#include<cmath>
+using namespace std;
+float fSin(int broj) {
+	float suma = 0;
+	for (int i = 1; i <= broj; i++)
+	{
+		suma += i / sin(i / i) + i;
+	}
+	return suma;
+}
+float fCos(int broj) {
+	float suma = 0;
+	for (int i = 1; i <= broj; i++)
+	{
+		suma += i / cos(i / i) + i;
+	}
+	return suma;
+}
+int main() {
+
+	float broj;
+	cout << "Unesite broj : ",
+		cin >> broj;
+
+	char operacija;
+	do {
+		cout << "Unesite operaciju 's'(sin) ili 'c'(cos) : ",
+			cin >> operacija;
+	}while (operacija != 's' && operacija != 'c');
+
+	if (operacija == 's') {
+		cout << "Rezultat je : " << fSin(broj);
+	}
+	else {
+		cout << "Rezultat je : " << fCos(broj);
+	}
+
+	return 1;
+}
+
+/*
+Napisati program koji korisniku omogućava unos cijelog broja N,
+te izračunava geometrijsku sredinu svih neparnih brojeva u intervalu [1, N] 
+koji nisu djeljivi sa brojem 5. 
+Rezultat trebi biti zaokružen na dvije decimale.
+
+Geometrijska sredina n brojeva se računa po formuli:
+ (a1*a2*...*an)^1/n
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+using namespace std;
+float geoSredina(int broj) {
+	float sredina = 1.0f;
+	int brojac = 0;
+	for (int i = 1; i <=broj; i++)
+	{
+		if (i % 2 != 0 && i % 5 != 0)
+			sredina *= i, brojac++;
+	}
+	return pow(sredina,1/float(brojac));
+}
+int main() {
+
+	int broj;
+	while (cout << "Unesite pozitivan broj : ", cin >> broj, broj < 0);
+
+	cout << "Geometrijska sredina je : " << setprecision(3) << geoSredina(broj);
+	
+
+	return 1;
+}
+
+/*
+Napisati program u kojem je potrebno unijeti odabrani broj cifara 
+počevši od cifre najveće težinske vrijednosti, 
+pa od njih sastaviti i napisati prirodni broj. 
+Unos cifara se prekida kada se unese broj manji od 0, 
+ukoliko korisnik unese cifru veću od 9, ispisati poruku da cifra nije validna,
+ali se unos ne prekida.
+
+(Obavezno koristiti barem jednu korisnički definisanu funkciju)
+Ispis neka bude oblika:
+Upisi cifru: 2
+Upisi cifru: 8
+Upisi cifru: 72
+Cifra nije validna
+Upisi cifru: -1
+Broj sastavljen od zadanih cifara je 28.
+
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+using namespace std;
+void cifra() {
+	int cifra, broj=0;
+	do{
+		cout << "Unesite cifru : ",
+			cin >> cifra;
+		if (cifra <= 9 && cifra >= 0) {
+			broj = broj * 10 + cifra;
+		}
+		if (cifra > 9) {
+			cout << "Cifra nije valida.";
+		}
+	} while (cifra >= 0);
+	cout << "Broj je : " << broj;
+
+}
+int main() {
+
+	cifra();
+	
+
+	return 1;
+}
+
+/*
+ a) Omogućiti korisniku unos prirodnog broja i nakon toga napraviti funkciju koja će prebrojati koliko taj broj ima cifara
+
+ b) Za taj broj pronaći i ispisati prvu, srednju i zadnju cifu (koristiti zasebne funkcije)
+
+ c) Obrnuti cifre tom broju (npr. ako je broj bio 12345 treba biti 54321)
+
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+using namespace std;
+int brojCifara(int broj) {
+	int brojac = 0;
+	while (broj) {
+		broj /= 10;
+		brojac++;
+	}
+	return brojac;
+}
+int reverse(int broj) {
+	int br2=0;
+	while (broj) {
+		br2 = br2 * 10 + broj % 10;
+		broj /= 10;
+	}
+	return br2;
+}
+int prva(int broj) {
+	int cifra;
+	while (broj > 0) {
+		cifra = broj % 10;
+		broj /= 10;
+	}
+	return cifra;
+}
+int zadnja(int broj) {
+	int cifra = broj % 10;
+	return cifra;
+}
+int srednja(int broj) {
+	int cifra = brojCifara(broj);
+	broj = broj / pow(10, cifra / 2);
+	broj = broj % 10;
+
+	return broj;
+}
+int main() {
+
+	int broj;
+	while (cout << "Unesite broj : ", cin >> broj, broj < 0);
+	cout << "Broj ima " << brojCifara(broj) << " cifri." << endl;
+	cout << "Broj u obrnutom redosljedu je : " << reverse(broj) << endl;
+	cout << "Prva cifra je : " << prva(broj) << endl;
+	cout << "Zadnja cifra je : " << zadnja(broj) << endl;
+	cout << "Srednja cifra je : " << srednja(broj) << endl;
+	return 1;
+}
+
+/*
+ Napisati program koji će omogućiti unos prirodnog broja A (A > 100000), 
+ te kreirati i ispisati broj B koji će se sastojati od cifara broja A u obrnutom redoslijedu u kojem je svaka parna uklonjena.
+ (npr. ako se unese 45362792 funkcija će vratiti 9735). Ispisati razliku brojeva A i B.
+
+(Obavezno koristiti bar jednu korisnički definiranu funkciju.)
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+using namespace std;
+int reverseA(int a) {
+	int temp=0,b=0;
+	while (a) {
+		temp = temp * 10 + a % 10;
+		if (temp % 2 != 0)
+			b = b * 10 + temp % 10;
+		a /= 10;
+	}
+	return b;
+}
+int main() {
+
+	int a;
+	while (cout << "Unesite vrijednost a : ", cin >> a, a < 10000);
+	cout << "Novi broj je : " << reverseA(a) << endl;
+	cout << "Razlika brojeva je : " << abs(a - reverseA(a));
+
+	return 1;
+}
+
+/*
+ Poštujući sve faze procesa programiranja, napisati program koji korisniku omogućava unos cijelog broja N,
+ te izračunava vrijednost sume faktorijela neparnih brojeva u intervalu [1, N].
+ Suma faktorijela prikazana je sljedećom formulom: S = 1! + 3! + 5! + ... + N!
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+using namespace std;
+int faktorijel(int x) {
+	int f = 1;
+	for (int i = 1; i <= x; i++)
+	{
+		f *= i;
+	}
+	return f;
+}
+int sumaF(int x) {
+	int suma = 0;
+	for (int i = 1; i <= x; i++)
+	{
+		if (i % 2 != 0)
+			suma += faktorijel(i);
+	}
+	return suma;
+}
+int main() {
+
+	int n;
+	while (cout << "Unesite n : ", cin >> n, n < 0);
+	cout << "Suma faktorijela neparnih brojeva je : " << sumaF(n);
+
+
+	return 1;
+}
+
+
+/*
+ Napišite program, poštujući sve faze procesa programiranja, 
+ koji će ispisati sve troznamenkaste brojeve koji su jednaki sumi faktorijela svojih znamenki.
+ABC = A! + B! + C!
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+using namespace std;
+int faktorijel(int x) {
+	int f = 1;
+	for (int i = 1; i <= x; i++)
+	{
+		f *= i;
+	}
+	return f;
+}
+int sumaFC(int x) {
+	int suma = 0;
+	int temp;
+	while (x) {
+		temp = x % 10;
+		suma += faktorijel(temp);
+		x /= 10;
+	}
+	return suma;
+}
+void ispis() {
+	for (int i = 100; i < 1000; i++)
+	{
+		if (i == sumaFC(i)) {
+			cout << i << "\t";
+		}
+	
+	}
+}
+int main() {
+
+	
+	ispis();
+
+	return 1;
+}
+
+/*
+Omogučiti unos dva broja X i Y iz intervala od 10 do 5000.
+Kreirati program koji će pronaći i ispisati sve brojeve od X do Y (uključujući granične vrijednosti)
+za koje važi da je obrnuti broj djeljiv sa njegovom sumom cifara.
+Za olakšanje rješenja zadataka napraviri funkcije za obrtanje poretka cifara i za sumu cifara.
+Npr. Za broj 144 vrijedi da mu je suma cifara 9 i da je broj koji se dobije nakon što se njegove cifre obrnu 441, djeljiv sa 9.
+
+Definišite vrijednosti intervala [X, Y]: 11 150 Brojevi koji ispunjuju dati uslov: 18 20 21 24 27
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+using namespace std;
+int reverseB(int x){
+	int novi = 0;
+	while (x) {
+		novi = novi * 10 + x % 10;
+		x /= 10;
+	}
+	return novi;
+}
+int sumaCifri(int x) {
+	int suma = 0;
+	while (x) {
+		suma += x % 10;
+		x /= 10;
+	}
+	return suma;
+}
+void ispis(int x,int y) {
+	for (int i = x; i <y ; i++)
+	{
+		if (reverseB(i) % sumaCifri(i)==0)
+			cout << i << "\t";
+	}
+}
+int main() {
+
+	int x, y;
+	while (cout << "Unesite x : ", cin >> x, x < 10 || x>5000);
+	while (cout << "Unesite y : ", cin >> y, y < 10 || y>5000);
+	ispis(x,y);
+	
+	return 1;
+}

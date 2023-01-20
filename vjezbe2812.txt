@@ -1,0 +1,160 @@
+#include<iostream>
+#include<iomanip>
+using namespace std;
+int* createVariable(int value = 0) {
+	return new int(value);
+}
+void printVariable(int* p) {
+	if (p != nullptr)
+		cout << *p;
+}
+void setVariable(int*& p, int newValue) {
+	*p = newValue;
+}
+void destroyVariable(int*& p) {
+	delete p;
+	p = nullptr;
+}
+int* createArray(int size = 10) {
+	return new int[size];
+}
+void enterArray(int* p, int length) {
+	for (int i = 0; i < length; i++)
+	{
+		cout << "Unesite element : ";
+		cin >> *(p + i);
+	}
+}
+void printArray(int* p, int length) {
+	for (int i = 0; i < length; i++)
+	{
+		cout << *(p + i) << endl;
+		
+	}
+}
+void destroyArray(int* p) {
+	delete[] p;
+}
+void test2() {
+	int duzina;
+	cout << "Unesite duzinu : ",
+		cin >> duzina;
+
+	int* arr = createArray(duzina);
+	enterArray(arr, duzina);
+	printArray(arr, duzina);
+	destroyArray(arr);
+
+}
+int** createMatrix(int rows = 5, int columns = 5) {
+	int** matrix = new int*[rows];
+	for (int i = 0; i < rows; i++)
+	{
+		*(matrix + i) = new int [columns] {0};
+	}
+	return matrix;
+}
+void enterMatrix(int** matrix,int rows = 5, int columns = 5) {
+	
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns; j++)
+		{
+			cout<<"Unesite element : ",
+				cin >> *(*(matrix + i) + j);
+		}
+	}
+}
+void printMatrix(int**& matrix, int rows = 5, int columns = 5) {
+
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns; j++)
+		{
+			cout << setw(4)<< * (*(matrix + i) + j);
+		}
+		cout << endl;
+	}
+}
+void destroyMatrix(int**& matrix,int r) {
+	for (int i = 0; i < r; i++)
+	{
+		delete[] *(matrix+i);
+	}
+	delete matrix;
+}
+void test3() {
+
+	int r, c;
+	cout << "Unesite br redova : ", cin >> r;
+	cout << "Unesite br kolona : ", cin >> c;
+
+	int** matrix = createMatrix(r, c);
+	enterMatrix(matrix,r, c);
+	printMatrix(matrix, r, c);
+	destroyMatrix(matrix, r);
+
+}
+int** addTwoMatrix(int**& matrix, int rows, int columns, int**& matrix2, int rows2, int columns2) {
+	if (rows != rows2 || columns != columns2) {
+		return nullptr;
+	}
+	int** m3 = createMatrix(rows, columns);
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns; j++)
+		{
+			m3[i][j] = matrix[i][j] + matrix2[i][j];
+		}
+	}
+	return m3;
+}
+int** subTwoMatrix(int**& matrix, int rows, int columns, int**& matrix2, int rows2, int columns2) {
+	if (rows != rows2 || columns != columns2) {
+		return nullptr;
+	}
+	int** m3 = createMatrix(rows, columns);
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns; j++)
+		{
+			m3[i][j] = matrix[i][j] - matrix2[i][j];
+		}
+	}
+	return m3;
+}
+void scaleMatrix(int**& matrix, int r, int c, int scalar) {
+	for (int i = 0; i < r; i++)
+	{
+		for (int j = 0; j < c; j++)
+		{
+			matrix[i][j] += scalar;
+		}
+	}
+}
+bool areEqual(int**& matrix, int rows, int columns, int**& matrix2, int rows2, int columns2) {
+	if (rows != rows2 || columns != columns2) {
+		return false;
+	}
+	for (int i = 0; i < rows; i++)
+	{
+		for (int j = 0; j < columns; j++)
+		{
+			if (matrix[i][j] != matrix2[i][j])
+				return false;
+		}
+	}
+	return true;
+
+}
+int main() {
+
+	/*int* p = createVariable(55);
+	printVariable(p);
+	setVariable(p, 32);
+	destroyVariable(p);*/
+	//test2();
+	test3();
+
+	return 1;
+}

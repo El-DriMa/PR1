@@ -1,0 +1,409 @@
+/*
+Napisati program koji simulira bacanje 3 kockice
+(jedna kockica ima 6 strana i na tim stranama su brojevi 1 - 6).
+Simuliranje bacanja svake kockice ostvariti funkcijom rand() % 6 + 1. 
+Simulirati konstantno bacanje sve tri kockice dok se u dva uzastopna bacanja ne desi 
+da se dobiju isti brojevi na sve tri kockice (npr. u šestom bacanju se dobiju
+brojevi 2, 2, 2, a u sedmom 4, 4, 4 na sve tri kockice).
+
+Ispisati koliko je ukupno bilo bacanja dok se nije ispunio navedeni uslov.
+
+Nije potrebno tražiti bilo kakav unos od korisnika.
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+#include<cstdlib>
+using namespace std;
+void funkcija() {
+	srand(time(NULL));
+
+	int brBacanja = 0, dvaUzastopna = 0;
+	do {
+
+		int prva = rand() % 6 + 1;
+		int druga= rand() % 6 + 1;
+		int treca= rand() % 6 + 1;
+
+		brBacanja++;
+
+		if (prva == druga && druga == treca)
+			dvaUzastopna++;
+		else
+			dvaUzastopna = 0;
+
+	} while (dvaUzastopna < 2);
+
+	if (dvaUzastopna == 2) {
+		cout << "Broj bacanja je : " << brBacanja;
+	}
+}
+int main() {
+	funkcija();
+	
+	
+	return 1;
+}
+
+/*
+Napisati program koji omogućava unos pozitivnog broja n
+te pronalazi njegove parne cifre i formira novi broj u kojem su
+parne cifre zamijenjene cifrom '5'.
+
+Dodatno program treba ispisati razliku unesenog i broja koji se dobije nakon zamjene.
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+#include<cstdlib>
+using namespace std;
+int noviBroj(int n) {
+	int novi = 0, brojac=0;
+	while (n) {
+		if ((n%10) % 2 == 0) {
+			novi = novi + 5 * pow(10, brojac);
+			brojac++;
+		}
+		else {
+			novi = novi + n%10 * pow(10,brojac);
+			brojac++;
+		}
+		
+		n /= 10;
+	}
+	return novi;
+}
+
+int main() {
+	
+	int n;
+	while (cout << "Unesite n : ", cin >> n, n < 0);
+	cout << "Novi broj je : " << noviBroj(n) << endl;
+	cout << "Razlika je : " << abs(n - noviBroj(n));
+
+	
+	return 1;
+}
+
+/*
+ Svaki paran broj se može prikazati kao suma dva prosta broja (tkz. Goldbachovo pravilo).
+ Napisati program koji će najprije učitati dva prirodna broja n1 i n2 (n2 > n1).
+
+Zatim prikazati sve parne brojeve u intervalu od n1 do n2 kao sumu dva prosta broja.
+
+(U glavnom programu samo unijeti navedena dva prirodna broja i pozvati funkciju koja obavlja zadani posao.)
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+#include<cstdlib>
+using namespace std;
+bool prost(int x) {
+	if (x <= 1) return false;
+	if (x == 2 || x == 3) return true;
+	for (int i = 2; i < x; i++)
+	{
+		if (x % i == 0) return false;
+	}
+	return true;
+}
+void goldbach(int x) {
+	for (int i = x / 2, j = x / 2; i <= x; i++, j--) {
+		if (prost(i) && prost(j)) {
+			cout << x << " = " << i << "+" << j << endl;
+		}
+	}
+}
+void ispis(int n1, int n2) {
+	int temp = 0;
+	if (n1 > n2) {
+		temp = n1;
+		n1 = n2;
+		n2 = temp;
+	}
+	if (n1 % 2 != 0)
+		n1++;
+	for (int i = n1; i < n2; i+=2)
+	{
+		goldbach(i);
+	}
+}
+int main() {
+
+	int n1, n2;
+	while (cout << "Unesite n1 : ", cin >> n1, n1 < 0);
+	while (cout << "Unesite n2 : ", cin >> n2, n2 < 0);
+
+	ispis(n1, n2);
+
+
+	return 1;
+}
+
+/*
+ Napisati program koji omogućava korisniku unos prirodnog broja N (50 < N < 5000000).
+ Zatim uneseni broj proslijediti funkciji kao parametar po referenci. 
+ U funkciji je od unesenog broja potrebno kreirati novi broj tako što će se
+ poredak cifri unesenog broja obrnuti.
+ Prilikom obrtanja potrebno je odbaciti neparne cifre.
+
+Npr. Za uneseni broj 1234567 obrnuti broj bez neparnih cifara je 642.
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+#include<cstdlib>
+using namespace std;
+int reverse(int& n) {
+	int novi = 0;
+	while (n) {
+		if ((n % 2) == 0) {
+			novi = novi * 10 + n % 10;
+		}
+		
+		n /= 10;
+	}
+	return novi;
+}
+int main() {
+
+	int n;
+	while (cout << "Unesite n : ", cin >> n, n < 50 || n>5000000);
+	cout << "Novi broj je : " << reverse(n) << endl;
+
+
+	return 1;
+}
+
+/*
+ Napisati program koji će omogućiti korisniku unos broja n ( 10 <= n <= 1000).
+ Zatim simulirati n bacanja kockice (kockica ima 6 strana i na tim stranicama su brojevi 1-6). 
+ Simuliranje bacanja svake kockice ostvariti funkcijom rand() % 6 + 1. 
+ Izračunati statičke podatke u kojem procentu ukupnog bacanja se dobiva svaki od mogućih brojeva 1-6.
+ Obavezno koristiti switch statement za zbrajanje rezultata bacanja kockice.
+
+Napomena: Po želji kreirati dodatne funkcije da se olakša rješavanje zadataka.
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+#include<cstdlib>
+using namespace std;
+void bacanje(int n) {
+
+	srand(time(NULL));
+	
+	int brBacanja = n;
+	int br1 = 0;
+	int br2 = 0;
+	int br3 = 0;
+	int br4 = 0;
+	int br5 = 0;
+	int br6 = 0;
+
+	while (n > 0) {
+		int broj = rand() % 6 + 1;
+		switch (broj)
+		{
+		case 1:
+			br1++;
+		case 2:
+			br2++;
+		case 3:
+			br3++;
+		case 4:
+			br4++;
+		case 5:
+			br5++;
+		case 6:
+			br6++;
+
+		default:
+			break;
+		}
+		n--;
+	}
+	cout << "Broj 1 se pojavljuje : " << (br1 / float(brBacanja)*100)<< "% " << endl;
+	cout << "Broj 2 se pojavljuje : " << (br2 / float(brBacanja)*100) << "% " << endl;
+	cout << "Broj 3 se pojavljuje : " << (br3 / float(brBacanja)*100) << "% " << endl;
+	cout << "Broj 4 se pojavljuje : " << (br4 / float(brBacanja)*100) << "% " << endl;
+	cout << "Broj 5 se pojavljuje : " << (br5 / float(brBacanja)*100) << "% " << endl;
+	cout << "Broj 6 se pojavljuje : " << (br6 / float(brBacanja)*100) << "% " << endl;
+
+
+}
+int main() {
+
+	int n;
+	while (cout<<"Unesite n: ", cin >> n, n < 10 || n>1000);
+
+	bacanje(n);
+
+	return 1;
+}
+
+/*
+Napisati program koji će omogućiti korisniku unos broja n (uz uslov 10 <= n <= 1000). 
+Zatim simulirati unos n slučajnih vrijednosti.
+Simuliranje unosa ostvariti funkcijom rand() % 1000 + 1. 
+Izračunati statističke podatke u kojem procentu se od n generisanih slučajnih vrijednosti pojavljuje prost broj.
+
+Npr. Ako je generisano 10 brojeva (n = 10): 5,7,4,13,17,20,25,23,30,45, 
+u ovom uzorku od 10 brojeva postoji 5 prostih brojeva pa je procenat prostih brojeva u ovom slučaju 50%.
+
+(Napomena: Po želji kreirati dodatne funkcije da se olakša rješavanje zadatka.)
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+#include<cstdlib>
+using namespace std;
+bool prost(int x) {
+	if (x <= 1) return false;
+	if (x == 2 || x == 3) return true;
+	for (int i = 2; i < x; i++)
+	{
+		if (x % i == 0) return false;
+	}
+	return true;
+}
+void unos(int n) {
+	int brojac = 0,brBacanja=n;
+
+	srand(time(NULL));
+	while (n) {
+		int broj = rand() % 1000 + 1;
+		if (prost(broj))
+			brojac++;
+
+		n--;
+	}
+	cout << "Postotak prostih brojeva je : " << (brojac / float(brBacanja))*100;
+
+}
+int main() {
+
+	int n;
+	while (cout << "Unesite n: ", cin >> n, n < 10 || n>1000);
+
+	unos(n);
+
+	return 1;
+}
+
+/*
+Napisati program kojim će se izračunati 20 uzastopnih vrijednosti brzine i pređenog puta objekta 
+u slobodnom padu u razmaku od po 3 sec. 
+Prilikom računanja potrebno je i ispisati na ekran uzastopno brzinu i
+pređeni put zajedno za svaki period od 3sec.
+Obratiti pažnju da se koriste ispravni tipovi podataka.
+Formula za brzinu slobodnog pada je: v = g * t; g=9.81 
+Formula za pređeni put pri slobodnom padu je: s=(g/2)*pow(t,2)
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+#include<cstdlib>
+using namespace std;
+
+int main() {
+
+	const float g = 9.81;
+	for (int i = 0, t = 3; i < 20; i++, t += 3)
+	{
+		cout << "Situacija u " << t << "-oj sekundi je: " << endl;
+		cout << "Brzina je: " << g * t << endl;
+		cout << "Predjeni put: " << (g / 2) * pow(t, 2);
+		cout << "\n";
+		cout << "\n";
+	}
+
+	cin.get();
+
+	return 1;
+}
+
+
+/*
+ Napisati program koji će omogućiti korisniku unos dva minimalno trocifrena 
+ prirodna broja m i n (n > m, m > 100, n < 500).
+ Zatim napraviti funkciju koja će vratiti aritmetičku sredinu svih srednjih cifara svih brojeva u rangu od m do n.
+
+Također ta funkcija treba ispisati najveću srednju cifru navedenog ranga.
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+#include<cstdlib>
+using namespace std;
+int srednjaCifra(int x) {
+	int srednja = 0;
+	int brCifri = log10(x) + 1;
+	x = x / pow(10, brCifri / 2);
+	return x % 10;
+}
+float arit(int n, int m) {
+	int suma = 0,brojac=0,max=0;
+	for (int i = m; i <= n; i++)
+	{
+		suma += srednjaCifra(i);
+		brojac++;
+		if (srednjaCifra(i) > max)
+			max = srednjaCifra(i);
+	}
+	cout << "Najveca srednja cifra je: " << max << endl;
+	return suma / float(brojac);
+}
+int main() {
+
+	int n, m;
+	while (cout << "Unesite n: ", cin >> n, n < 0 || n>500);
+	while (cout << "Unesite m: ", cin >> m, m > n || m < 100);
+
+	cout << "Aritmeticka sredina svih srednjih cifri je: " << arit(n, m);
+	return 1;
+}
+
+
+/*
+ Napišite program u kojem ćete omogućiti unos dva prirodna broja 
+ manja od 500 koji predstavljaju granice intervala,
+ te pronaći i ispisati kojom cifrom/znamenkom završava umnožak svih prostih brojeva 
+ u zadanom intervalu uključujući granične vrijednosti.
+
+*/
+#include<iostream>
+#include<cmath>
+#include<iomanip>
+#include<cstdlib>
+using namespace std;
+bool prost(int x) {
+	if (x <= 1) return false;
+	if (x == 2 || x == 3) return true;
+	for (int i = 2; i <x; i++)
+	{
+		if (x % i == 0) return false;
+	}
+	return true;
+}
+void funkcija(int a, int b) {
+	int p = 1;
+	for (int i = a; i <= b; i++)
+	{
+		if (prost(i)) {
+			p *= i;
+		}
+	}
+	cout << "Zavrsava cifrom : " << p % 10;
+}
+int main() {
+
+	int a, b;
+	while (cout << "Unesite a: ", cin >> a, a < 0 || a>500);
+	while (cout << "Unesite b: ", cin >> b, b < a || b>500);
+
+	funkcija(a, b);
+
+
+	return 1;
+}

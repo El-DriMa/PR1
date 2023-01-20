@@ -1,0 +1,222 @@
+#include<iostream>
+using namespace std;
+/*
+ 1.Napisati program koji ce omoguciti korisniku unos broja n(uz uvjet unosa 10<=n<=1000).
+ Ispisati sve brojeve u rangu (0,n) koji zadovoljavaju uvjete:
+ -da su prosti i
+ -da su im cifre u rastucem redosljedu(npr 149,123).
+*/
+bool prost(int n) {
+
+	if (n <= 1) return false;
+	if (n == 2 || n == 3) return true;
+	for (int i = 2; i < n; i++)
+	{
+		if (n % i == 0) return false;
+	}
+	return true;
+
+}
+bool rastuciRedosljed(int n) {
+	int temp = 0;
+	while (n > 0) {
+		temp = n % 10;
+		n /= 10;
+		if (n % 10 > temp) return false;
+	}
+	return true;
+}
+void ispis(int n) {
+	for (int i = 0; i < n; i++)
+	{
+		if (prost(i) && rastuciRedosljed(i))
+			cout << i << endl;
+	}
+}
+int main() {
+
+	int n;
+	while (cout << "Unesite broj : ", cin >> n, n < 10 || n>1000);
+
+	ispis(n);
+
+	return 1;
+}
+
+
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+/*
+ 2.Npisati program koji ce omoguciti korisniku unos broja n(uz uslov 10<=n<=1000).
+ Zatim simulirati unos n slucajnih vrijednosti.
+ Simuliranje unosa ostvariti funmkcijom rand()1000+1.
+ Izracunati statisticke podatke u kojem procentu se od n generisanih slucajnih vrijednosti pojavljuje savrsen broj.
+ Za neki broj se kaze da je savrsen ukoliko je jednak sumi svih djelilaca (ne ukljucujuci njega samog).
+ Npr 28 je savrsen broj (njegovi djelioci su 1,2,4,7 i 14) 1+2+4+7+14=28.
+ Jedini savrseni brojevi u opsegu od 1 do 100 su 6 i 28.
+*/
+int* alocirajNiz(int v1) {
+	return new int[v1];
+}
+void unos(int *p,int n) {
+	srand(time(NULL));
+	for (int i = 0; i < n; i++)
+	{
+		*(p + i) = rand() % 1000 + 1;
+	}
+	for (int i = 0; i < n; i++)
+	{
+		cout << *(p + i) << endl;
+	}
+}
+bool savrsen(int n) {
+	int suma = 0;
+	for (int i = 1; i < n; i++)
+	{
+		if (n % i == 0) {
+			suma += i;
+		}
+	}
+	return suma == n;
+}
+float postotak(int* p, int n) {
+	int brojac = 0;
+	for (int i = 0; i < n; i++)
+	{
+		if (savrsen(*(p+i))) brojac++;
+	}
+	return float(brojac / n);
+}
+void dealociraj(int* p) {
+	delete[]p;
+}
+int main() {
+
+	int n;
+	while (cout << "Unesite broj : ", cin >> n, n < 10 || n>1000);
+	int* niz = alocirajNiz(n);
+	unos(niz,n);
+	cout << "Postotak je : " << postotak(niz, n)*100;
+	dealociraj(niz);
+
+	return 1;
+}
+
+
+#include<iostream>
+using namespace std;
+/*
+ 3.Napisati program koji ce omoguciti korisniku unos brojeva m i n (10<=n<=100 && m>n).
+ Ispisati sve brojeve u rangu n-m koji zadovoljavaju uvjete :
+ -da nemaju ni jednu parnu cifru
+ -da su im cifre u opadajucem redosljedu.
+*/
+bool parnaCifra(int broj) {
+	int temp = 0;
+	while (broj > 0) {
+		temp = broj % 10;
+		if (temp % 2 == 0)
+			return true;
+		broj /= 10;
+	}
+	return false;
+}
+bool opadajuciRedosljed(int broj) {
+	int temp = 0;
+	while (broj > 0) {
+		if (broj % 10 < temp)
+			return false;
+		temp = broj % 10;
+		broj /= 10;
+		
+	}
+	return true;
+}
+void ispis(int n, int m) {
+	for (int i = n; i < m; i++)
+	{
+		if (parnaCifra(i)==false && opadajuciRedosljed(i)) cout << i << endl;
+	}
+}
+int main() {
+
+	int n, m;
+	do {
+		cout << "Unesite n : ", cin >> n;
+	} while (n < 10 || n>1000);
+	do {
+		cout << "Unesite m : ", cin >> m;
+	} while (m < n);
+	
+	ispis(n, m);
+
+
+	return 1;
+}
+
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+/*
+ 4.Napisati program koji ce korisniku omoguciti unos broj n(uz oslov 10<=n<=1000).
+ Zatim simulirati unos n slucajnih vrijednosti.
+ Simuliranje unosa ostvariti funkcijom rand()%1000+1.
+ Izracunati statisticke podatke u kom procentu se od n generisanih slucajnih vrijednosti pojavljuju
+ dva susjedna prosta broja.
+ Npr.Ako je generisano 10 brojeva(n=10):5,7,4,12,13,17,25,29,30,45,u ovom
+ uzorku od 10 brojeva imamo 4 prosta broja koji su susjedi pa je procenat 40%.
+*/
+int* alociraj(int n) {
+	return new int[n];
+}
+void unos(int* p, int n) {
+	srand(time(NULL));
+	for (int i = 0; i < n; i++)
+	{
+		*(p + i) = rand() % 1000 + 1;
+	}
+	for (int i = 0; i < n; i++)
+	{
+		cout << *(p + i) << endl;
+	}
+
+}
+bool prost(int broj) {
+	if (broj <=1 ) return true;
+	if (broj == 2 || broj == 3) return true;
+	for (int i = 2; i < broj; i++)
+	{
+		if (broj % i == 0) return false;
+	}
+	return true;
+}
+float postotak(int* p, int n) {
+
+	int brojac = 0;
+
+	for (int i = 0; i < n-1; i++)
+	{
+		if(prost(*(p+i)) && prost(*(p+i+1)))
+			brojac++;
+
+	}
+	return (float(brojac*2) / n )* 100;
+}
+void dealociraj(int* p) {
+	delete[] p;
+}
+int main() {
+
+	int n;
+	do {
+		cout << "Unesite pozitivan broj : ", cin >> n;
+	} while (n < 10 || n>1000);
+
+	int* niz = alociraj(n);
+
+	unos(niz, n);
+	cout << "Postotak je : " << postotak(niz,n);
+
+	return 1;
+}
