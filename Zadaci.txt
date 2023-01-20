@@ -1,0 +1,136 @@
+#include<iostream>
+using namespace std;
+/*
+1.Napisati program koji omogucava unos prirodnog broja n preko tast
+i izracunava sumu : S=1/3^2+1/5^2+..+1/(2n+1)^2
+*/
+
+int main() {
+
+	int n;
+	do {
+		cout << "Unesite pozitivan broj : ", cin >> n;
+	} while (n < 0);
+
+	float suma = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		suma += 1 / float(pow(2 * i + 1, 2));
+	}
+	cout << "Suma je : " << suma;
+
+	return 1;
+}
+
+#include<iostream>
+using namespace std;
+/*
+2.Napisati program koji korisniku omogucava unos cijelog broja N,
+te izracunava vrijednost sume faktorijela prostih brojeva
+u intervalu [1,N]
+*/
+bool prost(int n) {
+
+	if (n == 1) return false;
+	if (n == 2 || n == 3) return true;
+	for (int i = 2; i < n; i++)
+	{
+		if (n % i == 0) return false;
+	}
+	return true;
+}
+int faktorijel(int n) {
+	int p = 1;
+	for (int i = 1; i <=n; i++)
+	{
+		p *= i;
+	}
+	return p;
+}
+int sumaFaktorijela(int n) {
+	int suma = 0;
+	for (int i = 1; i <=n; i++)
+	{
+		if (prost(i)) {
+			suma += faktorijel(i);
+		}
+	}
+	return suma;
+}
+
+int main() {
+
+	int n;
+	do {
+		cout << "Unesite pozitivan broj : ", cin >> n;
+	} while (n <= 0);
+	cout << "Suma faktorijela je : " << sumaFaktorijela(n);
+
+
+	return 1;
+}
+
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+
+/*
+3.Napisati program koji ce omoguciti korisniku unos broja n(uz uslov unosa 10<n<=1000).
+Zatim simulirati unos n slucajnih vrijednosti.
+Simuliranje unosa ostvariti funkcijom rand()%1000+1.
+Izracunati statisticke podatke u kojem procentu se od n generisanih brojeva pojavljuje prost broj.
+Npr.Ako generisemo 10 brojeva={5,7,4,13,17,20,25,30,45}
+u ovom uzorku od 10 br imamo 4 prosta pa je procenat 40%.
+*/
+int* alocirajNiz(int vel) {
+	return new int[vel];
+}
+void random(int* p, int n) {
+	srand(time(NULL));
+	for (int i = 0; i < n; i++)
+	{
+		*(p + i) = rand() % 1000 + 1;
+	}
+	for (int i = 0; i < n; i++)
+	{
+		cout << *(p + i) << endl;
+	}
+}
+bool prost(int n) {
+
+	if (n <= 1) return false;
+	if (n == 2 || n == 3) return true;
+    for (int i = 2; i < n; i++)
+	{
+		if (n % i == 0) return false;
+	}
+
+	return true;
+}
+float postotak(int* p, int n) {
+	int counter = 0;
+	for (int i = 0; i < n; i++)
+	{
+		if (prost(*(p + i)))
+			counter++;
+	}
+	return float(counter) / n;
+}
+
+void dealociraj(int* p) {
+	delete[]p;
+}
+
+int main() {
+
+	int n; while (cout << "Unesite n: ", cin >> n, n < 10 || n > 1000);
+	int* niz = alocirajNiz(n);
+	random(niz, n);
+
+	cout << "Postotak prostih: " << postotak(niz, n) * 100 << "%";
+
+	dealociraj(niz);
+
+
+	return 1;
+}
