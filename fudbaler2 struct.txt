@@ -1,0 +1,210 @@
+/*
+  Kreirati dvodimenzionalni dinamički niz čiji su elementi objekti tipa fudbaler 
+  ( fudbaler je struktura čija su obilježja data u nastavku).
+
+   struct fudbaler{
+   int ID;
+   char*ime_i_Prezime;
+   char* pozicija;//prihvati samo slova N, O i V (napad, vezni i odbrana);
+   int *broj_golova;
+  };
+  Omogućiti korisniku da unese dimenzije niza te omogućiti unos elemenata. 
+  Redovi 2D niza predstavljaju različite klubove, a kolone različite fudbalere (igrače). 
+  Radi jednostavnosti rješenja, predpostaviti da svaki klub ima isti broj fudbalera.
+  Ovisno o unesenoj poziciji (N,O ili V) identificira se da li je dati fudbaler napadač,odbrambeni ili vezni igrač.
+  U različitim klubovima mogu igrati različiti brojevi napadača, veznih igrača ili odbrambenih igrača.
+
+  (Npr. klub 1 može imati 10 veznih, 3 napadača i 5 odbrambenih igrača, dok klub 2 može imati 12 veznih,
+  2 napadača i 6 odbrambenih igrača i sl.) //totalno nebitan podatak
+
+  Izračunati i ispisati prosječan broj golova po poziciji igrača za sve klubove. 
+  Zatim omogućiti korisniku izbor jednog tipa fudbalera (N,O ili V) i prema korisničkom izboru pronaći klub koji ima 
+  najbolji prosjek postignutih zgoditaka tog tipa igraca 
+  (npr. ako se unese slovo V za klub 1 računa se prosjek za 10 veznih igrača dok se za klub 2 računa prosjek 12 veznih igrača i ti prosjeci se porede).
+
+  (U ovom zadatku je zabranjeno indexirati elemente niza uglastim zagradama.
+  Obavezno koristiti aritmetiku pokazivača. 
+  Obavezno voditi računa o dealociranju dinamički alocirane memorije.)
+*/
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+struct fudbaler {
+	int ID;
+	char* imePrezime;
+	char* pozicija;//prihvati samo slova N, O i V (napad, vezni i odbrana);
+	int* brojGolova;
+
+	fudbaler() {
+		ID = 0;
+		imePrezime = nullptr;
+		pozicija = nullptr;
+		brojGolova = nullptr;
+	}
+
+	char* alocirajText(const char* temp) {
+		int v = strlen(temp) + 1;
+		char* novi = new char[v];
+		strcpy_s(novi, v, temp);
+		return novi;
+	}
+	char* unosTexta() {
+		char text[100];
+		cin.getline(text, 100);
+		return alocirajText(text);
+	}
+	void unos() {
+		
+		cout << "Unesite ID : ",
+			cin >> ID;
+		cin.ignore();
+		cout << "Unesite ime i prezime : ",
+			imePrezime = unosTexta();
+		do {
+			cout << "Unesite poziciju : ",
+				pozicija = unosTexta();
+		} while (*pozicija != 'N' && *pozicija != 'V' && *pozicija != 'O');
+		brojGolova = new int;
+		cout << "Unesite broj golova : ",
+			cin >> *brojGolova;
+	}
+	void ispis() {
+		cout << "ID : " << ID << endl;
+		cout << "Ime i prezime : " << imePrezime << endl;
+		cout << "Pozicija : " << pozicija << endl;
+		cout << "Broj golova : " << *brojGolova << endl;
+	}
+
+	~fudbaler() {
+		delete[] imePrezime;
+		delete[] pozicija;
+		delete brojGolova;
+	}
+};
+void unosNiza(fudbaler** f, int red, int kolona);
+void ispisNiza(fudbaler** f, int red, int kolona);
+void dealokacijaNiza(fudbaler** f, int red);
+void prosjecanBrojGolovaPoPoziciji(fudbaler** f, int red, int kolona);
+int najboljiProsjekTipa(fudbaler** f, int red, int kolona, char tip);
+
+int main() {
+
+	int red, kolona;
+	while (cout << "Unesite broj redova : ", cin >> red, red < 0);
+	while (cout << "Unesite broj kolona : ", cin >> kolona, kolona < 0);
+
+	fudbaler** f = new fudbaler * [red];
+	for (int i = 0; i < red; i++)
+	{
+		*(f + i) = new fudbaler[kolona];
+	}
+	unosNiza(f, red, kolona);
+	ispisNiza(f, red, kolona);
+	prosjecanBrojGolovaPoPoziciji(f, red, kolona);
+	char tip;
+	do {
+		cout << "Unesite jedan tip fudbalera (N,V ili O)",
+			cin >> tip;
+	} while (tip != 'N' && tip != 'V' && tip != 'O');
+	cout << "Najbolji tim tipa " << tip << " je : " << najboljiProsjekTipa(f, red, kolona, tip) << endl;
+
+	dealokacijaNiza(f, red);
+
+	return 1;
+}
+void unosNiza(fudbaler** f, int red, int kolona) {
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			(*(f + i) + j)->unos();
+		}
+	}
+}
+void ispisNiza(fudbaler** f, int red, int kolona) {
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			(*(f + i) + j)->ispis();
+		}
+	}
+}
+void prosjecanBrojGolovaPoPoziciji(fudbaler** f, int red, int kolona) {
+	int sumaN = 0, sumaV = 0, sumaO = 0;
+	int brojacN = 0, brojacV = 0, brojacO = 0;
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			if (*(*(f + i) + j)->pozicija == 'N') {
+				sumaN += *(*(f + i) + j)->brojGolova;
+				brojacN++;
+			}
+			if (*(*(f + i) + j)->pozicija == 'V') {
+				sumaV += *(*(f + i) + j)->brojGolova;
+				brojacV++;
+			}
+			if (*(*(f + i) + j)->pozicija == 'O') {
+				sumaO += *(*(f + i) + j)->brojGolova;
+				brojacO++;
+			}
+		}
+	}
+	cout << "Prosjecan broj golova pozicije N je : " << sumaN / float(brojacN) << endl;
+	cout << "Prosjecan broj golova pozicije V je : " << sumaV / float(brojacV) << endl;
+	cout << "Prosjecan broj golova pozicije O je : " << sumaO / float(brojacO) << endl;
+}
+int najboljiProsjekTipa(fudbaler** f, int red, int kolona, char tip) {
+	int sumaN = 0, sumaV = 0, sumaO = 0;
+	int brojacN = 0, brojacV = 0, brojacO = 0;
+	int maxN = INT_MIN,maxV=INT_MIN,maxO=INT_MIN;
+	int najN, najV, najO;
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			if (*(*(f + i) + j)->pozicija == 'N') {
+				sumaN += *(*(f + i) + j)->brojGolova;
+				brojacN++;
+			}
+			if (*(*(f + i) + j)->pozicija == 'V') {
+				sumaV += *(*(f + i) + j)->brojGolova;
+				brojacV++;
+			}
+			if (*(*(f + i) + j)->pozicija == 'O') {
+				sumaO += *(*(f + i) + j)->brojGolova;
+				brojacO++;
+			}
+		}
+		sumaN = sumaN / float(brojacN);
+		sumaV = sumaV / float(brojacV);
+		sumaO = sumaO / float(brojacO);
+		if (sumaV > maxV) {
+			maxV = sumaV;
+			najV = i;
+		}
+		if (sumaN > maxN) {
+			maxN = sumaN;
+			najN = i;
+		}
+		if (sumaO > maxO) {
+			maxO= sumaO;
+			najO = i;
+		}
+		sumaN = 0;
+		sumaV = 0;
+		sumaO = 0;
+	}
+	if (tip == 'N') return najN;
+	if (tip == 'V') return najV;
+	if (tip == 'O') return najO;
+}
+void dealokacijaNiza(fudbaler** f, int red) {
+	for (int i = 0; i < red; i++)
+	{
+		delete[] * (f + i);
+	}
+	delete[] f;
+	f = nullptr;
+}
