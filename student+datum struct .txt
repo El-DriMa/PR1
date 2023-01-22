@@ -1,0 +1,174 @@
+/*
+  Date su strukture : 
+  struct datum{
+  int d,m,g;
+  };
+  struct student{
+  int ID;
+  char imePrezime[30];
+  datum datumRodjenja;
+  float prosjecnaOcjena;
+  };
+  Kreirati 2D dinamicki niz ciji su elementi objekti tipa student.
+  Kreirajte funkcije za : 
+  -unos obiljezja studenta(neka funkcija prima pokazivac na student)
+  -za ispis obiljezja studenta(neka funkcija prima pokazivac na student)
+  -za validaciju unesenog datuma rodjenja(funkcija prima pokazivac na datumm
+  a vraca true ako je datum validan).
+  Pretpostaviti da redovi predstavljaju generacije a kolone predmete,
+  pronaci index generacije sa najboljim prosjekom i index predmeta sa najlosijim prosjekom.
+*/
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+struct datum {
+	int d, m, g;
+
+	void setDatum(int dan, int mjesec, int godina) {
+		d = dan;
+		m = mjesec;
+		g = godina;
+	}
+	void unosDatuma() {
+		cout << "Unesite dan : ",
+			cin >> d;
+		cout << "Unesite mjesec : ",
+			cin >> m;
+		cout << "Unesite godinu : ",
+			cin >> g;
+	}
+	void ispisDatuma() {
+		cout << d << "." << m << "." << g << endl;
+	}
+};
+bool isValid(datum* d) {
+	if (d->d < 1 || d->m>12 || d->d < 1) return false;
+	if (d->m == 2) {
+		if (d->g % 4 == 0 && (d->g % 100 != 0 || d->g % 400 == 0)) {
+			if (d->d > 29) return false;
+		}
+		else {
+			if (d->d > 28) return false;
+		}
+	}
+	else if (d->m == 4 || d->m == 6 || d->m == 9 || d->m == 11) {
+		if (d->d > 30) return false;
+	}
+	else if (d->d > 31) {
+		return false;
+	}
+	return true;
+}
+struct student {
+	int ID;
+	char imePrezime[30];
+	datum datumRodjenja;
+	float prosjecnaOcjena;
+
+	void unos() {
+		cout << "Unesite ID : ",
+			cin >> ID;
+		cin.ignore();
+		cout << "Unesite ime i prezime : ",
+			cin.getline(imePrezime, 30);
+		cout << "Unesite prosjecnu ocjenu : ",
+			cin >> prosjecnaOcjena;
+		datumRodjenja.unosDatuma();
+	}
+	void ispis() {
+		cout << "ID : " << ID << endl;
+		cout << "Ime i prezime : " << imePrezime << endl;
+		datumRodjenja.ispisDatuma();
+		cout << "Prosjecna ocjena : " << prosjecnaOcjena << endl;
+	}
+};
+void unosNiza(student** s, int red, int kolona); 
+void ispisNiza(student** s, int red, int kolona);
+void dealokacijaNiza(student** s, int red);
+int generacijaSaNajboljimProsjekom(student** s, int red, int kolona);
+int predmetSaNajlosijimProsjekom(student** s, int red, int kolona);
+int main() {
+
+	int red, kolona;
+	while (cout << "Unesite broj redova : ", cin >> red, red < 0);
+	while (cout << "Unesite broj kolona : ", cin >> kolona, kolona < 0);
+
+	student** s = new student * [red];
+	for (int i = 0; i < red; i++)
+	{
+		*(s + i) = new student[kolona];
+	}
+	unosNiza(s, red, kolona);
+	ispisNiza(s, red, kolona);
+	cout << "Generacija sa najboljim prosjekom je : Generacija " << generacijaSaNajboljimProsjekom(s, red, kolona) << endl;
+	cout << "Predmet sa najlosijim prosjekom je : Predmet " << predmetSaNajlosijimProsjekom(s, red, kolona) << endl;
+
+
+
+	dealokacijaNiza(s, red);
+	return 1;
+}
+void unosNiza(student** s, int red, int kolona) {
+	for (int i = 0; i < red; i++) {
+		for (int j = 0; j < kolona; j++) {
+			(*(s + i) + j)->unos();
+			if (!isValid(&(*(s + i) + j)->datumRodjenja)) {
+				cout << "Datum nije validan.Ponovite unos." << endl;
+				(*(s + i) + j)->datumRodjenja.unosDatuma();
+			}
+		}
+	}
+}
+void ispisNiza(student** s, int red, int kolona) {
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			(*(s + i) + j)->ispis();
+		}
+	}
+}
+int generacijaSaNajboljimProsjekom(student** s, int red, int kolona) {
+	int gen = 0, max = INT_MIN,suma=0;
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			suma += (*(s + i) + j)->prosjecnaOcjena;
+		}
+		suma = suma / float(kolona);
+		if (suma > max) {
+			max = suma;
+			gen = i;
+		}
+		suma = 0;
+	}
+
+	return gen;
+}
+int predmetSaNajlosijimProsjekom(student** s, int red, int kolona) {
+	int predmet = 0, min = INT_MAX, suma = 0;
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			suma += (*(s + i) + j)->prosjecnaOcjena;
+			suma = suma / float(kolona);
+			if (suma < min) {
+				min = suma;
+				predmet = j;
+			}
+		}		
+		suma = 0;
+	}
+
+	return predmet;
+}
+void dealokacijaNiza(student** s, int red){
+	for (int i = 0; i < red; i++)
+	{
+		delete[] * (s + i);
+	}
+	delete[] s;
+	s = nullptr;
+}
