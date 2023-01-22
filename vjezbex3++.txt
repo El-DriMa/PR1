@@ -1,0 +1,544 @@
+Zadatak 1
+Napravite rekurzivnu funkciju 'factorial' za računanje faktorijela pozitivnog broja n. 
+
+Zadatak 2
+Napravite rekurzivnu funkciju 'sum' za računanje sume kvadrata od 1 do n.
+Zadatak 3
+Napravite rekurzivnu funkciju 'sum' za računanje sume kvadrata od m do n.
+Zadatak 4
+Napravite rekurzivnu funkciju ‘nthFibonacci' za računanje n - tog Fibonacci broja.
+Zadatak 5
+Napišite rekurzivnu funkciju  'sumOdd' koja izračunava sumu neparnih brojeva između m i n.
+Zadatak 6
+Napišite rekurzivnu funkciju  'sumSpec' koja izračunava sumu brojeva između m i n, koji su djeljivi sa 3 i nedjeljivi sa 7.
+
+#include<iostream>
+#include<cmath>
+using namespace std;
+int factorial(int n) {
+	if (n == 0 || n == 1) return 1;
+	return n * factorial(n - 1);
+}
+int sum(int n) {
+	if (n == 1) return 1;
+	return  pow(n, 2) + sum(n - 1);
+}
+int sum2(int m, int n) {
+	if (n == m) return pow(n,1);
+	return pow(n, 2) + sum2(m,n-1);
+}
+int nthF(int n) {
+	if (n <= 2) return 1;
+	return nthF(n - 1) + nthF(n - 2);
+}
+bool isEven(int x) {return x % 2 == 0;}
+bool isOdd(int x) { return x % 2 != 0; }
+int sumOdd(int m,int n) {
+	if (m > n) return 0;
+	return (isOdd(m) ? m : 0) + sumOdd(m + 1, n);
+}
+bool nd7d3(int x) { return x % 7 != 0 && x % 3 == 0; }
+int sumSpec(int m, int n) {
+	if (m > n) return 0;
+	return (nd7d3(m) ? m : 0) + sumSpec(m + 1, n);
+}
+int main() {
+
+	cout<<sumSpec(5,10);
+
+	return 0;
+}
+
+Zadatak 7
+Napravite rekurzivnu funkciju 'sumUserInputs' koja će računati sumu brojeva koje je korisnik unio. Rekurzivna funkcija treba od korisnika zahtijevati unos brojeva sve dok korisnik ne negativan broj.
+
+int sumUserInput(int n=0) {
+
+	cout << "Unesi n : " << endl;
+	cin >> n;
+	if (n < 0) return 0;
+	return n + sumUserInput(n);
+}
+int main() {
+	
+	cout << sumUserInput();
+	return 0;
+}
+
+Zadatak 8
+Napravite rekurzivnu funkciju 'maxNumber' koja će zahtjevati unos pozitivnih brojeva od korisnika sve dok korisnik ne unese negativan broj ili broj 0. Povratna vrijednost iz funkcije treba da najveći uneseni broj.
+int maxNumber(int max=INT_MIN) {
+	int n;
+	cout << "Unesite n :", cin >> n;
+	if (n <= 0) return max;
+	max = (max <= n) ? n : max;
+	return maxNumber(max);
+}
+int main() {
+	
+	cout << maxNumber();
+	return 0;
+}
+
+Zadatak 10
+Napravite rekurzivnu funkciju 'printLetters', koja treba da ispiše sva velika slova koja se nalaze između dva proslijeđena velika slova. 
+
+bool isC(char k) {
+	if (k >= 'A' && k <= 'Z') return true;
+	return false;
+}
+char slova(char k1, char k2) {
+	
+	if (k1 >= k2) return k2;
+	cout << k1 << "\n";
+	return slova(k1+1, k2);
+	
+}
+int main() {
+
+	//(isC('*') ? cout << "da" : cout << "ne");
+	char k1, k2;
+	do {
+		cout << "unesite 2 slova :", cin >> k1, cin >> k2;
+	} while (!isC(k1) || !isC(k2));
+
+
+	cout << slova(k1,k2);
+ 	return 1;
+}
+
+Zadatak 11
+Napravite rekurzivnu funkciju 'printLettersInReverse', koja treba da ispiše sva velika slova koja se nalaze između dva proslijeđena velika slova (ali u obratnom redoslijedu). 
+
+char printLettersInReverse(char k1,char k2) {
+	if (k2 == k1) return k1;
+	cout << k2 << "\n";
+	return printLettersInReverse(k1, k2 - 1);
+
+}
+
+int main() {
+
+	char k1, k2;
+	do {
+		cout << "unesite 2 slova :", cin >> k1, cin >> k2;
+	} while (!isC(k1) || !isC(k2));
+
+
+	cout << printLettersInReverse(k1, k2);
+ 	return 1;
+}
+
+Zadatak 12
+Napišite program koji će omogućiti kreiranje niza od 7 cijelih brojeva, te uz pomoć rekurzivnih funkcija omogućiti:
+·         unos elemenata,
+·         ispis elemenata,
+·         izračunati sumu svih elemenata niza,
+·         sumu pozitivnih elemenata niza,
+·         sumu elemenata niza s parnim indeksom.
+
+
+void unos(int niz[], int v) {
+	
+	static int i;
+	if (i == v) {
+		i = 0;
+		cout << endl;
+		return;
+	}
+	cout << "Unesite element : ";
+	cin >> niz[i];
+	i++;
+	unos(niz, v);
+	
+}
+void ispis(int niz[], int v) {
+	static int i;
+	if (i == v) {
+		i = 0;
+		cout << endl;
+		return;
+	}
+	cout << niz[i] << " ";
+	i++;
+	ispis(niz, v);
+}-
+int suma(int niz[], int v) {
+	if (v <= 0) return 0;
+	return (suma(niz, v - 1) + niz[v - 1]); 
+}
+int sumaPozitivnih(int niz[], int v,int s) {
+	if (v == 0) return s;
+	if (niz[v - 1] > 0) {
+		return sumaPozitivnih(niz, v - 1, s + niz[v - 1]);
+	}
+	else {
+		return sumaPozitivnih(niz, v - 1, s);
+	}
+	}
+int sI(int niz[], int v, int i) {
+	if (i >= v) return 0;
+	return niz[i] + sI(niz, v, i + 2);
+}
+int main() {
+
+	const int v = 7;
+	int niz[v];
+	int s = 0, i = 0;
+	unos(niz, v);
+	ispis(niz, v);
+	cout << suma(niz, v) << endl;
+	cout << sumaPozitivnih(niz, v, s) << endl;
+	cout << sI(niz, v, i);
+ 	return 1;
+}
+
+Zadatak 13
+Napišite rekurzivnu funkciju 'countDigits', koja vraća broj cifara za dati broj.
+
+int countDigits(int x) {
+	if (x == 0) return 0;
+	return 1 + countDigits(x / 10);
+}
+int main() {
+
+	cout<<countDigits(183);
+ 	return 1;
+}
+
+Zadatak 14
+Napišite rekurzivnu funkciju 'sumOfDigits', koja vraća broj zbir cifara datog broj.
+int sumOfDigits(int x) {
+	if (x < 10) return x;
+	return (x % 10) + sumOfDigits(x / 10);
+}
+int main() {
+
+	cout << sumOfDigits(12399);
+ 	return 1;
+}
+
+Zadatak 15
+Napišite rekurzivnu funkciju 'isPrime', koja provjerava da li je dati broj prost.
+
+
+bool isPrime(int x,int i) {
+	if (x <= 2) return (x == 2) ? true : false;
+	if (x % i == 0) return false;
+	if (i * i > x) return true;
+    return isPrime(x,i+1);
+}
+int main() {
+	int i = 2;
+	cout<<isPrime(8,i);
+ 	return 1;
+}
+
+Zadatak 16
+Napišite program koji korištenjem rekurzivne funkcije ispisuje binarni ekvivalent unesenog prirodnog 
+broja N.
+
+#include<iostream>
+using namespace std;
+int numToBin(int n) {
+	if (n == 0) return 0;
+	return (numToBin(n / 2) * 10) + (n % 2);
+}
+int main() {
+
+	cout<<numToBin(15);
+
+	return 1;
+}
+
+
+Zadatak 7
+Napišite program koji će omogućiti kreiranje matrice 3x3 cijelih brojeva, te uz pomoć rekurzivnih 
+funkcija omogućiti:
+· unos elemenata,
+· ispis elemenata,
+· izračunati sumu svih elemenata matrice,
+· sumu pozitivnih elemenata matrice,
+· sumu elemenata matrice s parnim indeksima.
+
+#include<iostream>
+using namespace std;
+const int v = 3;
+void unos(int matrix[][v],int i, int j) {
+	if (i == v) return;
+	cout << "Unesite element : ",
+		cin >> matrix[i][j];
+	if (j < v - 1) {
+		unos(matrix, i, j + 1);
+	}
+	else {
+		unos(matrix, i + 1, 0);
+	}
+}
+void ispis(int matrix[][v], int i, int j) {
+	if (i == v) return;
+	cout << matrix[i][j] << endl;
+	if (j < v - 1) {
+		ispis(matrix, i, j + 1);
+	}
+	else {
+		ispis(matrix, i + 1, 0);
+	}
+}
+int sumAllElements(int matrix[][v], int i, int j) {
+	int sum = 0;
+	if (i == v) return 0;
+	sum += matrix[i][j];
+	if (j < v - 1) {
+		sum+=sumAllElements(matrix, i, j + 1);
+	}
+	else {
+		sum+=sumAllElements(matrix, i + 1, 0);
+	}
+	return sum;
+}
+int sumOfPositive(int matrix[][v], int i, int j) {
+	int sum = 0;
+	if (i == v) return 0;
+	if (matrix[i][j] > 0) {
+		sum += matrix[i][j];
+	}
+	if (j < v - 1) {
+		sum += sumOfPositive(matrix, i, j + 1);
+	}
+	else {
+		sum += sumOfPositive(matrix, i + 1, 0);
+	}
+	return sum;
+}
+int sumEvenIndex(int matrix[][v], int i, int j) {
+	int sum = 0;
+	if (i == v) return 0;
+	if (i%2==0 && j%2==0) {
+		sum += matrix[i][j];
+	}
+	if (j < v - 1) {
+		sum += sumEvenIndex(matrix, i, j + 1);
+	}
+	else {
+		sum += sumEvenIndex(matrix, i + 1, 0);
+	}
+	return sum;
+}
+int main() {
+
+	int matrix[v][v];
+	unos(matrix, 0, 0);
+	ispis(matrix, 0, 0);
+	cout << "Suma svih elemenata je : " << sumAllElements(matrix, 0, 0) << endl;
+	cout << "Suma pozitivnih elemenata je : " << sumOfPositive(matrix, 0, 0) << endl;
+	cout << "Suma elemenata sa parnim indexom je : " << sumEvenIndex(matrix, 0, 0) << endl;
+	
+
+	return 1;
+}
+
+Zadatak 7
+Napišite program koji će omogućiti kreiranje matrice 3x3 cijelih brojeva, te uz pomoć rekurzivnih 
+funkcija omogućiti:
+· unos elemenata,
+· ispis elemenata,
+· izračunati sumu svih elemenata matrice,
+· sumu pozitivnih elemenata matrice,
+· sumu elemenata matrice s parnim indeksima.
+· sumu glavne dijagonale,
+· sumu sporedne dijagonale,
+· ponalaženje najvećeg elementa u retku,
+· pronalaženje najvećeg elementa u koloni.
+
+
+#include<iostream>
+using namespace std;
+const int v = 3;
+void unos(int matrix[][v],int i, int j) {
+	if (i == v) return;
+	cout << "Unesite element : ",
+		cin >> matrix[i][j];
+	if (j < v - 1) {
+		unos(matrix, i, j + 1);
+	}
+	else {
+		unos(matrix, i + 1, 0);
+	}
+}
+void ispis(int matrix[][v], int i, int j) {
+	if (i == v) return;
+	cout << matrix[i][j] << endl;
+	if (j < v - 1) {
+		ispis(matrix, i, j + 1);
+	}
+	else {
+		ispis(matrix, i + 1, 0);
+	}
+}
+int sumAllElements(int matrix[][v], int i, int j) {
+	int sum = 0;
+	if (i == v) return 0;
+	sum += matrix[i][j];
+	if (j < v - 1) {
+		sum+=sumAllElements(matrix, i, j + 1);
+	}
+	else {
+		sum+=sumAllElements(matrix, i + 1, 0);
+	}
+	return sum;
+}
+int sumOfPositive(int matrix[][v], int i, int j) {
+	int sum = 0;
+	if (i == v) return 0;
+	if (matrix[i][j] > 0) {
+		sum += matrix[i][j];
+	}
+	if (j < v - 1) {
+		sum += sumOfPositive(matrix, i, j + 1);
+	}
+	else {
+		sum += sumOfPositive(matrix, i + 1, 0);
+	}
+	return sum;
+}
+int sumEvenIndex(int matrix[][v], int i, int j) {
+	int sum = 0;
+	if (i == v) return 0;
+	if (i%2==0 && j%2==0) {
+		sum += matrix[i][j];
+	}
+	if (j < v - 1) {
+		sum += sumEvenIndex(matrix, i, j + 1);
+	}
+	else {
+		sum += sumEvenIndex(matrix, i + 1, 0);
+	}
+	return sum;
+}
+int sumaGlavneDijagonale(int matrix[][v], int i, int j) {
+	int suma = 0;
+	if (i == v || j == v) return 0;
+	else suma+= matrix[i][j] + sumaGlavneDijagonale(matrix, i + 1, j + 1);
+	return suma;
+
+}
+int sumaSporedneDijagonale(int matrix[][v], int i, int j) {
+	int suma = 0;
+	if (i==v || j<0) return 0;
+	else suma += matrix[i][j] + sumaSporedneDijagonale(matrix, i+1, j-1);
+	return suma;
+}
+int najveciElementReda(int matrix[][v], int i, int j) {
+	if (i == v || j == v) return 0;
+	int max = najveciElementReda(matrix, i, j + 1);
+	if (matrix[i][j] > max)
+		return matrix[i][j];
+	return max;
+}
+int najveciElementKolone(int matrix[][v], int i, int j) {
+	if (i == v || j == v) return 0;
+	int max = najveciElementKolone(matrix, i+1, j);
+	if (matrix[i][j] > max)
+		return matrix[i][j];
+	return max;
+}
+int main() {
+
+	int matrix[v][v];
+	unos(matrix, 0, 0);
+	ispis(matrix, 0, 0);
+	cout << "Suma svih elemenata je : " << sumAllElements(matrix, 0, 0) << endl;
+	cout << "Suma pozitivnih elemenata je : " << sumOfPositive(matrix, 0, 0) << endl;
+	cout << "Suma elemenata sa parnim indexom je : " << sumEvenIndex(matrix, 0, 0) << endl;
+	cout << "Suma elemenata glavne dijagonale je : " << sumaGlavneDijagonale(matrix, 0, 0) << endl;
+	cout << "Suma elemenata sporedne dijagonale je : " << sumaSporedneDijagonale(matrix, 0, v-1) << endl;
+
+	int red;
+	do {
+		cout << "Unesite broj reda : ";
+		cin >> red;
+	} while (red<0 || red>=v);
+	cout << "Najveci element reda " << red << " je : " << najveciElementReda(matrix, red, 0) << endl;
+
+	int kolona;
+	do {
+		cout << "Unesite broj kolone : ";
+		cin >> kolona;
+	} while (kolona<0 || kolona>=v);
+	cout << "Najveci element kolone " << kolona << " je : " << najveciElementKolone(matrix, 0, kolona) << endl;
+
+
+	return 1;
+}
+
+#include<iostream>
+#include<cmath>
+using namespace std;
+/*
+Napišite program za računanje rješenja kvadratne jednadžbe. Za realna rješenje upotrijebite
+funkciju:
+void kvadratna (int, int, int, float *, float *);
+a za kompleksna rješenja upotrijebite funkciju:
+void kvadratna2 (int, int, int, kompleksni *, kompleksni *);
+struct kompleksni {
+float realni;
+float imaginarni;
+};
+*/
+struct kompleksni {
+    float realni;
+    float imaginarni;
+};
+
+void kvadratna(int a, int b, int c, float* x1, float* x2) {
+    // računamo diskriminantu
+    int D = b * b - 4 * a * c;
+
+    if (D >= 0) {
+        // ako je diskriminanta pozitivna, rješenja su realna
+        *x1 = (-b + sqrt(D)) / (2 * a);
+        *x2 = (-b - sqrt(D)) / (2 * a);
+    }
+}
+
+void kvadratna2(int a, int b, int c, kompleksni* x1, kompleksni* x2) {
+    // računamo diskriminantu
+    int D = b * b - 4 * a * c;
+
+    // ako je diskriminanta negativna, rješenja su kompleksna
+    x1->realni = -b / (2 * a);
+    x1->imaginarni = sqrt(-D) / (2 * a);
+    x2->realni = -b / (2 * a);
+    x2->imaginarni = -sqrt(-D) / (2 * a);
+}
+
+int main() {
+    int a, b, c;
+    cout << "Unesite koeficijente kvadratne jednadžbe (ax^2 + bx + c = 0): ";
+    cin >> a >> b >> c;
+
+    float x1, x2;
+    kvadratna(a, b, c, &x1, &x2);
+
+    kompleksni z1, z2;
+    kvadratna2(a, b, c, &z1, &z2);
+
+    if (x1 == x2) {
+        cout << "Jednadžba ima jedno rješenje: x = " << x1 << endl;
+    }
+    else {
+        cout << "Jednadžba ima dva rješenja: x1 = " << x1 << ", x2 = " << x2 << endl;
+    }
+    if (z1.imaginarni == 0 && z2.imaginarni == 0)
+        cout << "Jednacina nema kompl. resenja.";
+    else if (z1.imaginarni > 0 && z2.imaginarni == 0)
+        cout << "Jednadžba ima jedno kompleksno rješenje: z1 = " << z1.realni << " + " << z1.imaginarni << endl;
+    else if (z1.imaginarni == 0 && z2.imaginarni> 0)
+        cout << "Jednadžba ima jedno kompleksno rješenje: z2 = " << z2.realni << " + " << z2.imaginarni << endl;
+    else
+        cout << "Jednadžba ima dva kompleksna rješenja: z1 = " << z1.realni << " + " << z1.imaginarni << "i, z2 = " << z2.realni << " + " << z2.imaginarni << "i" << endl;
+
+    return 0;
+}
+
