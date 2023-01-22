@@ -1,0 +1,216 @@
+Zadatak 1
+Napisati funkciju 'task1' koja korisniku omogućuje unos prirodnog broja N (onemogućiti negativne vrijednosti i 0), te izračunava vrijednost sume faktorijela neparnih brojeva u intervalu[1, N] koji nisu djeljivi brojem 7. Suma faktorijela prikazana je sljedećom formulom.
+
+S = 1!+ 3!+ 5!+ … + N!
+Funkcija treba da ispiše vrijednost sume.
+
+#include<iostream>
+using namespace std;
+void task1();
+int main() {
+
+	task1();
+
+
+	return 0;
+}
+void task1() {
+
+	int broj, f = 1, s = 0;
+	do {
+		cout << "Unesite broj : ", cin >> broj;
+	} while (broj <= 0);
+	for (int i = 1; i < broj; i++)
+	{
+		f *= i;
+		if (i % 2 != 0 && i % 7 != 0) {
+			s += f;
+		}
+
+	}
+	cout << s;
+}
+Zadatak 2:
+Napisati funkciju 'task2' u kojoj je potrebno unijeti odabrani broj znamenki počevši od znamenke najveće težinske vrijednosti, pa od njih sastaviti i ispisati prirodni broj. Unos znamenki se prekida kada se unese broj manji od 0 ili veći od 9. Ispisati poruku ukoliko je dobiveni broj savršen. Ispis neka bude oblika:
+Primjer izlaza:
+Upisi znamenku:2
+Upisi znamenku:8
+Upisi znamenku:-1
+...
+Broj sastavljen od zadanih znamenki je 28.
+Broj je savršen.
+Svršenim se naziva onaj prirodni broj kojem je zbir pozitivnih djelilaca različitih od sebe samog jednak samom tom broju. Najmanji broj koji ima ovakva svojstva je broj 6. 
+Npr.
+6 = 3 + 2 + 1 
+28 = 14 + 7 + 4 + 2 + 1
+
+#include<iostream>
+using namespace std;
+void task1();
+void task2();
+bool savrsen(int broj);
+
+int main() {
+
+	task2();
+	
+
+	return 0;
+}
+void task1() {
+
+	int broj, f = 1, s = 0;
+	do {
+		cout << "Unesite broj : ", cin >> broj;
+	} while (broj <= 0);
+	for (int i = 1; i < broj; i++)
+	{
+		f *= i;
+		if (i % 2 != 0 && i % 7 != 0) {
+			s += f;
+		}
+
+	}
+	cout << s;
+}
+
+void task2() {
+
+	int znamenka,broj=0;
+	do {
+		cout << "Unesite znamenku : ", cin >> znamenka;
+		if (znamenka > 0 && znamenka < 10) {
+			broj *= 10, broj += znamenka;
+		}
+	} while (znamenka > 0 && znamenka<10);
+
+	cout << broj << endl;
+
+	if (savrsen(broj) == true) {
+		cout << "Broj je savrsen.";
+	}
+	else {
+		cout << "Broj nije savrsen.";
+	}
+
+}
+bool savrsen(int broj) {
+	int suma = 0;
+	for (int i = 1; i < broj; i++)
+	{
+		if (broj % i == 0) {
+			suma += i;
+		}
+	}
+	if (suma == broj) {
+		return true;
+	}
+	return false;
+}
+
+Zadatak 3:
+Napisati funkciju 'task3' koja korisniku omogućava unos realnog broja x, cijelog broja m i odabir funkcije za izračun datog izraza. Korisnik bira funkciju unosom jednog od sljedećih karaktera: 's' (sin), 'c' (cos), 'q' (sqrt) i 'p' (pow). U slučaju da korisnik unese karakter koji ne odgovara niti jednoj od predefinisanih vrijednosti ispisati odgovarajuću poruku i ponoviti odabir. Funkciji pow postavite broj 2 za drugi parametar.
+Za odabranu funkciju sin izraz je:
+f(x,m)=1+1/sin⁡〖(x)+x〗 +2/(sin⁡(x/2)+x)+(…)+m/(sin⁡(x/m)+x)
+Broj faktora u izrazu odgovara unesenom broju m. U rješenju obavezno iskoristiti switch iskaz.
+int main() {
+	
+	task3();
+	
+	return 0;
+}
+void task3() {
+	int m;
+	double x;
+	char karakter;
+	cout << "Unesite brojeve : ", cin >> x, cin >> m;
+	do {
+		cout << "Unesite karakter : ", cin >> karakter;
+	} while (karakter != 's' && karakter != 'c' && karakter != 'q' && karakter != 'p');
+	switch (karakter)
+	{
+	case 's':
+		cout << sinus(x, m); break;
+	case 'c':
+		cout << kosinus(x, m); break;
+	case 'q':
+		cout << sqrt(x); break;
+	case 'p':
+		cout << pow(x, 2); break;
+
+	default:
+		break;
+	}
+}
+int sinus(double x,int m) {
+	int s = 0;
+	for (int i = 1; i < m; i++)
+	{
+		s += (i / (sin(x / i) + x));
+	}
+	return s;
+}
+int kosinus(double x, int m) {
+	int s = 0;
+	for (int i = 1; i < m; i++)
+	{
+		s += (i / (cos(x / i) + x));
+	}
+	return s;
+}
+Zadatak 4 
+
+Napisati funkciju 'task4' koja omogućuje korisniku unos cijelog broja N, te izračunava geometrijsku sredinu svih neparnih brojeva u intervalu [1, N] koji nisu djeljivi sa brojem 5.  Funkcija treba da ispiše izračunatu vrijednost.
+Geometrijska sredina n brojeva se računa po formuli:
+〖(a_1*a_2…〖*a〗_n)〗^(1/n)    ili   √(n&a_1*a_2…a_n )
+Za uneseno n = 3, rezultat je: 1.73.
+
+void task4() {
+	int n,p=1,brojac=0;
+	do {
+		cout << "Unesite broj : ", cin >> n;
+	} while (n < 0);
+	for (int i = 1; i < n; i+=2)
+	{
+		if (i % 5 != 0) {
+			p *= i;
+			brojac++;
+		}
+	}
+	cout<< pow(p,double (1.0 / brojac));
+
+}
+
+Zadatak 5:
+Napisati funkciju 'task5' koja omogućuje unos pozitivnog broja n te pronalazi njegovu najmanju cifru i formira novi broj u kojem je najmanja cifra zamijenjena cifrom '3'. Ukoliko uneseni broj n sadrži više istih cifara koje su ujedno i najmanje, tada je potrebno zamijeniti svaku od njih. Dodatno funkcija treba ispisati absolutnu razliku unesenog i broja koji se dobije nakon zamjene najmanje cifre.
+Primjer izlaza:
+Unesite pozitivan broj: 5865
+Broj nakon promjene najmanje cifre: 3863
+Razlika brojeva iznosi: 2002
+	
+void task5() {
+	int n;
+	do {
+		cout << "Unesite broj : ", cin >> n;
+	} while (n < 0);
+	int temp = n,najmanjaCifra=n%10;
+	while (temp > 0) {
+		if (najmanjaCifra > temp % 10)
+			najmanjaCifra = temp % 10;
+		temp /= 10;
+	}
+	temp = n;
+	int t = 0,noviBroj=0;
+	while (temp != 0) {
+		if (temp % 10 == najmanjaCifra) {
+			noviBroj += pow(10, t) * 3;
+		}
+		else {
+			noviBroj += pow(10, t) * (temp % 10);
+		}
+		t++;
+		temp /= 10;
+	}
+	cout << noviBroj << endl;
+	cout << abs(noviBroj - n) << endl;
+}
