@@ -28,6 +28,11 @@ long long int suma(int* niz, int v) {
         return *(niz + v - 1) + suma(niz, v - 1);
     }
 }
+void ispisiNiz(int* niz, int v) {
+    if (v == 0) return;
+    cout << *niz << " ";
+    ispisiNiz(niz + 1, v - 1);
+}
 int main() {
 
     int v;
@@ -35,10 +40,11 @@ int main() {
 
     int* niz = new int[v];
     popuniNiz(niz, v);
-    for (int i= 0; i < v; i++)
+    /*for (int i= 0; i < v; i++)
     {
         cout << *(niz + i) << " ";
-    }
+    }*/
+    ispisiNiz(niz,v);
     cout << endl;
     cout << "Suma je : " << suma(niz, v);
     delete[] niz;
