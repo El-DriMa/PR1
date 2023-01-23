@@ -67,45 +67,52 @@ Rekurzija se prekida kada se popuni cijeli niz ili kada se desi overflow na inte
 (U ovom zadatku je zabranjeno indeksirati niz uglastim zagradama. Obavezno koristiti aritmetiku pokazivača.)
 */
 #include<iostream>
+#include<cstdlib>
+#include<cmath>
 using namespace std;
 void popuniNiz(int* niz, int v) {
-    if (v < 2) *niz = 2;
+    if (v == 1) *niz = 2;
     else {
         popuniNiz(niz, v - 1);
-        *(niz + v-1) = *(niz + v-2) * 2;
+        *(niz + v - 1) = *(niz + v - 2) * 2;
     }
 }
-bool provjera(int* niz, int v, int broj,int brojac=0) {
-    if (brojac == v) return false;
-    if (*(niz + brojac) == broj) return true;
-    provjera(niz, v, broj, brojac + 1);
-    
+bool provjera(int* niz, int v,int broj) {
+    if (v == 0) return false;
+    if (*niz == broj) return true;
+    return provjera(niz + 1, v - 1, broj);
 }
+void ispisiNiz(int* niz, int v) {
+    if (v == 0) return;
+    cout << *niz << " ";
+    ispisiNiz(niz + 1, v - 1);
+}
+
 int main() {
+   
+    srand(time(NULL));
 
     int v;
-    while (cout << "Unesite velicinu niza : ", cin >> v, v <=0);
+    while (cout << "Unesite velicinu niza : ", cin >> v, v <= 2);
 
     int* niz = new int[v];
     popuniNiz(niz, v);
-    for (int i = 0; i < v; i++)
-    {
-        cout << *(niz + i) << " ";
-    }
+    ispisiNiz(niz, v);
     cout << endl;
     int broj;
-    cout << "Unesite broj koji zelite provjeriti : ",
+    cout << "Koji broj zelite provjeriti? ",
         cin >> broj;
-    if (provjera(niz, v, broj))
-        cout<<"Taj broj se nalazi u nizu."<<endl;
-    else
-        cout << "Taj broj se ne nalazi u nizu." << endl;
+    if (provjera(niz, v, broj)) {
+        cout << "Broj se nalazi u nizu.";
+    }
+    else {
+        cout << "Broj se ne nalazi u nizu.";
+    }
 
     delete[] niz;
 
     return 0;
 }
-
 
 /*
 Napisati program koji će omogućiti korisniku da unese veličinu 
