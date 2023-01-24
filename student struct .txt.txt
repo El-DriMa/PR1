@@ -1,0 +1,134 @@
+#include<iostream>
+#include<cmath>
+#include<cstdlib>
+using namespace std;
+struct student
+{
+    char* ID;
+    char* imePrezime;
+    float* prosjek;
+
+    student() {
+        ID = nullptr;
+        imePrezime = nullptr;
+        prosjek = nullptr;
+    }
+    char* alocirajText(const char* temp) {
+        int v = strlen(temp) + 1;
+        char* novi = new char[v];
+        strcpy_s(novi, v, temp);
+        return novi;
+    }
+    char* unosTexta() {
+        char text[100];
+        cin.getline(text, 100);
+        return alocirajText(text);
+    
+    }
+    void unos() {
+        cin.ignore();
+        cout << "Unesite ID : ",
+            ID = unosTexta();
+        cout << "Unesite ime i prezime : ",
+            imePrezime = unosTexta();
+        prosjek = new float;
+        cout << "Unesite prosjek : ",
+            cin >> *prosjek;
+    }
+    void ispis() {
+        cout << "ID : " << ID << endl;
+        cout << "Ime i prezime : " << imePrezime << endl;
+        cout << "Prosjek : " << *prosjek << endl;
+    }
+
+    ~student() {
+        delete[] ID;
+        delete[] imePrezime;
+        delete prosjek;
+    }
+};
+void unosNiza(student** s, int red, int kolona);
+void ispisNiza(student** s, int red, int kolona);
+void dealocirajNiz(student** s, int red);
+int fakultetSaNajvecimProsjekom(student** s, int red, int kolona);
+char* studentSaNajvecimProsjekom(student** s, int red, int kolona);
+int main() {
+
+    int red, kolona;
+    while (cout << "Unesite broj redova : ", cin >> red, red <= 0);
+    while (cout << "Unesite broj kolona : ", cin >> kolona, kolona <= 0);
+
+    student** s = new student*[red];
+    for (int i = 0; i < red; i++)
+    {
+        *(s + i) = new student[kolona];
+    }
+
+    unosNiza(s, red, kolona);
+    ispisNiza(s, red, kolona);
+    cout << "Fakultet sa najvecim prosjekom je : Fakultet " << fakultetSaNajvecimProsjekom(s, red, kolona) << endl;
+    cout << "Student sa najvecim prosjekom je student sa ID " << studentSaNajvecimProsjekom(s, red, kolona) << endl;
+
+
+    dealocirajNiz(s, red);
+	return 1;
+}
+void unosNiza(student** s, int red, int kolona) {
+    for (int i = 0; i < red; i++)
+    {
+        for (int j = 0; j < kolona; j++)
+        {
+            (*(s + i) + j)->unos();
+        }
+    }
+}
+void ispisNiza(student** s, int red, int kolona) {
+    for (int i = 0; i < red; i++)
+    {
+        for (int j = 0; j < kolona; j++)
+        {
+            (*(s + i) + j)->ispis();
+        }
+    }
+}
+int fakultetSaNajvecimProsjekom(student** s, int red, int kolona) {
+    int f = 0, max = INT_MIN;
+    float suma = 0;
+    for (int i = 0; i < red; i++)
+    {
+        for (int j = 0; j < kolona; j++)
+        {
+            suma += *(*(s + i) + j)->prosjek;
+        }
+        suma = suma / float(kolona);
+        if (suma > max) {
+            max = suma;
+            f = i;
+        }
+        suma = 0;
+    }
+    return f;
+}
+char* studentSaNajvecimProsjekom(student** s, int red, int kolona) {
+    char* student = new char[100];
+    int max = INT_MIN;
+    for (int i = 0; i < red; i++)
+    {
+        for (int j = 0; j < kolona; j++)
+        {
+            if (*(*(s + i) + j)->prosjek>max) {
+                max = *(*(s + i) + j)->prosjek;
+                strcpy_s(student, 100, (*(s + i) + j)->ID);
+            }
+        }
+    }
+    return student;
+}
+void dealocirajNiz(student** s, int red) {
+    for (int i = 0; i < red; i++)
+    {
+        delete[] * (s + i);
+    }
+    delete[] s;
+    s = nullptr;
+}
