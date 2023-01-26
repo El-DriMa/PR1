@@ -1,0 +1,59 @@
+/*
+  Napisati program koji će omogućiti korisniku da unese veličinu jednodimenzionalnog
+  dinamičkog niza integer vrijednosti. 
+  Napisati i testirati rekurzivnu funkciju koja će taj niz popuniti serijom Fibonacci brojevima. 
+  Rekurzija se prekida kada se popuni cijeli niz ili kada se desi overflow na integer varijabli. 
+  Zatim napisati i testirati drugu rekurzivnu funkciju koja će u tom nizu naći 
+  određenu vrijednost koju korisnik unese sa tastature. U ovom zadatku je zabranjeno indeksirati niz uglastim zagradama. 
+  Obavezno koristiti aritmetiku pokazivača.
+*/
+#include<iostream>
+#include<ctime>
+#include<cstdlib>
+using namespace std;
+void popuniNiz(int* niz, int v) {
+	if (v < 3) {
+		*niz = 0;
+		*(niz + 1) = 1;
+	}
+	else {
+		popuniNiz(niz, v - 1);
+		*(niz + v - 1) = *(niz + v - 2) + *(niz + v - 3);
+	}
+}
+bool br(int* niz, int v, int broj) {
+	if (v == 0) return false;
+	if (broj == *niz) return true;
+	return br(niz+1, v-1, broj);
+}
+void ispisiNiz(int* niz, int v) {
+	if (v == 0) return;
+	cout << *niz << " ";
+	ispisiNiz(niz+1, v - 1);
+}
+int main() {
+
+	int v;
+	while (cout << "Unesite velicinu niza : ", cin >> v, v <= 0);
+	
+	int* niz = new int[v];
+	popuniNiz(niz, v);
+	ispisiNiz(niz, v);
+	cout << endl;
+
+	int broj;
+	while (cout << "Unesite broj : ", cin >> broj, broj < 0);
+
+	
+	if(br(niz, v, broj)) {
+		cout << "Broj se nalazi u nizu.";
+	}
+	else {
+		cout << "Broj se ne nalazi u nizu.";
+	}
+
+
+	delete[] niz;
+
+	return 1;
+}
