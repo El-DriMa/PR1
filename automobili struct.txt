@@ -2,7 +2,7 @@
   Data je struktura : 
   struct automobili
   {
-    char* naziv;
+        char* naziv;
 	char* marka;
 	char *tip;
 	int* godinaProizvodnje;
