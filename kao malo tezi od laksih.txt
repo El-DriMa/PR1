@@ -107,10 +107,18 @@ bool prost(int x) {
 	}
 	return true;
 }
-void goldbach(int x) {
+void goldbach(int x) { //ispisuje svaki broj 4x
 	for (int i = x / 2, j = x / 2; i <= x; i++, j--) {
 		if (prost(i) && prost(j)) {
 			cout << x << " = " << i << "+" << j << endl;
+		}
+	}
+}
+void goldbach2(int x) { // tacan ispis
+	for (int i = 2; i <= x / 2; i++) {
+		if (prost(i) && prost(x - i)) {
+			cout << x << " = " << i << " + " << x - i <<endl;
+			break;
 		}
 	}
 }
@@ -125,7 +133,7 @@ void ispis(int n1, int n2) {
 		n1++;
 	for (int i = n1; i < n2; i+=2)
 	{
-		goldbach(i);
+		goldbach2(i);
 	}
 }
 int main() {
