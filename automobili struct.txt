@@ -1,0 +1,144 @@
+/*
+  Data je struktura : 
+  struct automobili
+  {
+    char* naziv;
+	char* marka;
+	char *tip;
+	int* godinaProizvodnje;
+	float* potrosnja;
+  };
+  Kreirati 2D dinamicki niz ciji su elementi objekti tipa automobili.
+  Omoguciti korisniku unoz dimenzija niza.
+  Kreirati funkcije : 
+  -za unos obiljezja automobila - neka funkcija prima pokazivac na automobil boze.
+  Obavezno automatizirati unos za sve.
+  Zadatak se nece smatrati ispravim ako ovo nije uradjeno.
+  -za ispis svih obiljezja.
+  Pretpostavimo da redovi predstavljaju firme,a kolone automobile u firmi.
+  Pronaci index firme sa najmanjom prosjecnom potrosnjom automobila.
+  Obavezno koristiti aritmetiku pokazivaca.
+
+*/
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+struct automobili
+{
+	char* naziv;
+	char* marka;
+	char* tip;
+	int* godinaProizvodnje; //u rangu 2005-2022
+	float* potrosnja;
+	
+	automobili() {
+		naziv = new char[10];
+		marka = new char[10];
+		tip = new char[10];
+		godinaProizvodnje = new int;
+		potrosnja = new float;
+	}
+
+	~automobili() {
+		delete[] naziv;
+		naziv = nullptr;
+		delete[] marka;
+		marka = nullptr;
+		delete[] tip;
+		tip = nullptr;
+		delete godinaProizvodnje;
+		godinaProizvodnje = nullptr;
+		delete potrosnja;
+		potrosnja = nullptr;
+	}
+};
+void unosNiza(automobili** a, int red, int kolona);
+void ispisNiza(automobili** a, int red, int kolona);
+void dealokacijaNiza(automobili** a, int red);
+int firmaSaNajmanjomPotrosnjom(automobili** a, int red, int kolona);
+int main() {
+
+	srand(time(NULL));
+
+	int red, kolona;
+	while (cout << "Unesite broj redova : ", cin >> red, red <= 0);
+	while (cout << "Unesite broj kolona : ", cin >> kolona, kolona <= 0);
+
+	automobili** a = new automobili*[red];
+	for (int i = 0; i < red; i++)
+	{
+		*(a + i) = new automobili[kolona];
+	}
+
+	unosNiza(a,red, kolona);
+	ispisNiza(a, red, kolona);
+	cout << "Firma sa najmanjom prosjecnom potrosnjom je : Firma " << firmaSaNajmanjomPotrosnjom(a, red, kolona);
+
+	dealokacijaNiza(a, red);
+	return 1;
+}
+char* unosKaraktera(int duzina) {
+	static const char k[] = "0123456789"
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		"abcdefghijklmnopqrstuvwxyz";
+
+	char* s = new char[duzina + 1];
+	for (int i = 0; i < duzina; ++i) {
+		s[i] = k[rand() % (sizeof(k) - 1)];
+	}
+	s[duzina] = '\0';
+	return s;
+}
+void unosNiza(automobili** a, int red, int kolona) {
+	
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			(*(a + i) + j)->naziv = unosKaraktera(10);
+			(*(a + i) + j)->marka = unosKaraktera(10);
+			(*(a + i) + j)->tip = unosKaraktera(10);
+			*(*(a + i) + j)->godinaProizvodnje = 2005 + rand()%18;
+			*(*(a + i) + j)->potrosnja =1+ rand() %15;
+		}
+	}
+}
+void ispisNiza(automobili** a, int red, int kolona) {
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			cout << "Naziv : " << (*(a + i) + j)->naziv << endl;
+			cout << "Marka : " << (*(a + i) + j)->marka << endl;
+			cout << "Tip : " << (*(a + i) + j)->tip << endl;
+			cout << "Godina proizvodnje : " << *(*(a + i) + j)->godinaProizvodnje << endl;
+			cout << "Potrosnja : " << *(*(a + i) + j)->potrosnja << endl;
+		}
+	}
+}
+int firmaSaNajmanjomPotrosnjom(automobili** a, int red, int kolona) {
+	int firma = 0;
+	float suma = 0, min = INT_MAX;
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			suma += *(*(a + i) + j)->potrosnja;
+		}
+		suma = suma / kolona;
+		if (min > suma) {
+			min = suma;
+			firma = i;
+		}
+		suma = 0;
+	}
+	return firma;
+}
+void dealokacijaNiza(automobili** a, int red) {
+	for (int i = 0; i < red; i++)
+	{
+		delete[] * (a + i);
+	}
+	delete[] a;
+	a = nullptr;
+}
