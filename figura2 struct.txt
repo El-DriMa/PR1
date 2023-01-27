@@ -1,0 +1,126 @@
+/*
+  Kreirati dvodimenzionalni dinamički niz čiji su elementi objekti tipa figura 
+  (figura je struktura čija su obilježja data u nastavku). 
+  Omogućiti korisniku da unese dimenzije niza, te omogućiti unos elemenata.
+
+  struct figura
+  {
+    int ID;
+    char *nazivFigure;
+    float *visinaFigure;
+  }
+  Potrebno je napisati funkciju koja će računati prosječnu visinu svih figura koje se nalaze 
+  na crnim poljima ispod sporedne dijagonale. 
+  Funkcija treba vratiti pokazivač na memorijsku lokaciju u kojoj je upisana ta vrijednost.
+
+*/
+#include<iostream>
+#include<cstdlib>
+using namespace std;
+struct figura
+{
+	int ID;
+	char* nazivFigure;
+	float* visinaFigure;
+
+	figura() {
+		ID = 0;
+		nazivFigure = new char[10];
+		visinaFigure = new float;
+	}
+
+	void unos() {
+		cout << "Unesite ID : ",
+			cin >> ID;
+		cin.ignore();
+		cout << "Unesite naziv figure : ",
+			cin.getline(nazivFigure, 10);
+		cout << "Unesite visinu figure : ",
+			cin >> *visinaFigure;
+	}
+	void ispis() {
+		cout << "ID : " << ID << endl;
+		cout << "Naziv : " << nazivFigure << endl;
+		cout << "Visina : " << *visinaFigure << endl;
+	}
+
+	~figura() {
+		delete[] nazivFigure;
+		nazivFigure = nullptr;
+		delete visinaFigure;
+		visinaFigure = nullptr;
+	}
+};
+void unosNiza(figura** f, int red, int kolona);
+void ispisNiza(figura** f, int red, int kolona);
+void dealocirajNiz(figura** f, int red);
+float* prosjecnaVisina(figura** f, int red, int kolona);
+int main() {
+
+	srand(time(NULL));
+
+	int red, kolona;
+	while (cout << "Unesite broj redova : ", cin >> red, red <= 0);
+	while (cout << "Unesite broj kolona : ", cin >> kolona, kolona <= 0);
+
+	figura** f = new figura*[red];
+	for (int i = 0; i < red; i++)
+	{
+		*(f + i) = new figura[kolona];
+	}
+
+	unosNiza(f, red, kolona);
+	ispisNiza(f, red, kolona);
+
+	cout << "Prosjecna visina figura na crnim poljima ispod sporedne dijagonale je : " << *prosjecnaVisina(f, red, kolona) << endl;
+
+
+	dealocirajNiz(f, red);
+	return 1;
+}
+void unosNiza(figura** f, int red, int kolona) {
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			(*(f + i) + j)->unos();
+		}
+	}
+}
+void ispisNiza(figura** f, int red, int kolona) {
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			(*(f + i) + j)->ispis();
+		}
+	}
+}
+float* prosjecnaVisina(figura** f, int red, int kolona) {
+	float* suma = new float(0);
+	int brojac = 0;
+	for (int i = 0; i < red; i++)
+	{
+		for (int j = 0; j < kolona; j++)
+		{
+			if ((i + j) % 2 == 0 && (i+j)>kolona) {
+				*suma += *(*(f + i) + j)->visinaFigure;
+				brojac++;
+			}
+		}
+	}
+	if (brojac != 0)
+		*suma /= brojac;
+	else
+		*suma = 0;
+	return suma;
+
+}
+void dealocirajNiz(figura** f, int red) {
+	for (int i = 0; i < red; i++)
+	{
+		delete[] * (f + i);
+	}
+	delete[] f;
+	f = nullptr;
+}
